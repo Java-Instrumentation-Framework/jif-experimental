@@ -1,0 +1,79 @@
+<html>
+<body>
+<h3><font face="verdana,sans-serif">Basics</font></h3> 
+<font face="arial,sans-serif">
+
+<p>The "User" and "System" tabs represent actual preferences accessible by JVM you are running. In addition to that, you can create any number of similar tabs. They serve as worksheets, allowing you to quickly exchange information between files and actual preferences.<b> Note</b> that changes made in the User and System tabs are reflected in the preferences immediately and will be seen by other java processes, while changes in worksheets will be lost unless saved to files.<br></p>
+
+<p>To rename a key or change a value of a preference in the right pane, double-click on it, and edit in place. If the text is too long for in-place editor, right-click this line and choose "Edit row" in the context menu. A bigger editor window will show up.The context menu also has items for deleting a preference, or adding a new one. To add the first key use the "plus" button on the toolbar. </p>
+
+<p>To save entire preference tree to a file, select the corresponding tab (User or System), and choose File|Save from the main menu.</p>
+
+<p>To restore all preferences from a file, fully overwriting the current contents:</p>
+
+<ul>
+<li>choose File|Open to load the file into a new tab (worksheet);</li>
+
+<li>choose "Copy" in the context menu of the root node (named "/") of this worksheet;</li>
+
+<li>go to the tab you want to restore (User or System), and choose "Prune" in the context menu of its root node;</li>
+
+<li>finally choose "Paste" in the same menu.</li>
+</ul>
+</font>
+
+<h3><font face="verdana,sans-serif">More details</font></h3>
+<font face="arial,sans-serif">
+
+<p>The left pane shows the tree structure of preference nodes. All operations on nodes are accessible from the node context (right-click) menu. The operation is always performed on the selected node. If two nodes are involved (for Paste or Merge), the selected node is always the target. </p>
+
+<ul> 
+<li>To add a child to the selected node, choose "Add subnode" in the context menu. </li>
+
+<li>To rename the selected node, choose "Rename". The program will not allow empty names, nor names of existing sibling nodes. Also, a preference node name cannot contain slashes. </li>
+
+<li>To delete selected node and its entire subtree, choose "Delete node". </li>
+
+<li>To delete selected node, but preserve the subtree, choose "Eliminate". This operation reconnects all children of the selected node to its parent.</li>
+
+<li>To delete all children of the selected node, turning it into a leaf node, choose "Prune".<br> </li>
+
+<li>To delete all preferences (key-value pairs) stored in the selected node, choose "Delete all keys". </li>
+
+<li>After the preferences have been loaded by the program, they could be changed by other processes. The <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/prefs/Preferences.html">Java Preferences API</a> does not provide a reliable way to listen to such changes. To reread the subtree of selected node, choose "Refresh". This menu item is enabled for the "User" and "System" tabs only, not for worksheets. To see what has changed since the last refresh, use "Compare" (see below). </li>
+
+<li>Operations "Cut" and "Copy" work as you can expect, copying selected node (along with its entire subtree) to program's internal "clipboard". There is only one clipboard, so it can be used across tabs.</li>
+
+<li>The "Paste" operation adds the node on the clipboard as a child of selected node, and does not allow to replace a sibling with the same name. If successfull, It also deletes the subtree marked for cut.</li>
+
+<li>The "Merge" operation is similar to "Paste", but different. It adds to the target (selected) node all branches of the source (clipboard) node, which can be added without name clash, resulting in the union of two trees. Namely, if the source node has a first-level child named "foo" and the target node does not have such first-level child, it gets a copy of foo's subtree; if it does have such child, the Merge operation is applied to foo's children recursively.<br> </li>
+
+<li>The "Save as HTML" operation stores an HTML representation of selected subtree into a file, with all space characters replaced by "middle dot" (unicode 00b7). You can customize the way it looks by creating a style sheet named "javaprefs.css" in the output directory. For an example of such style sheet, click <a href="http://javaprefs.googlecode.com/svn/prefs/javaprefs.css">here.</a></li>
+
+<li>The Compare operation traverses two subtrees: of the node copied to the clipboard and of the selected node. It stops at the first difference in either node name or key or value.</li>
+
+<li>The Find operation brings up a traditional Search Dialog. You can specify what, where (in node names, keys, values) to search, and how to match. If you don't check "substrings match", the search text "cat" will match only "cat", but not "tomcat". Check "ignore case" if you want "cat" to match "Cat". Check "regular expression" if you search text is a <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html">Java regular expression</a>. After the first match is found, the button "Start" changes to "Next" to remind you that the search will proceed further. You can change search string and options in the middle of the search.</li>
+</ul> 
+</font>
+
+<h3><font face="verdana,sans-serif">Main menu</font></h3>
+<font face="arial,sans-serif">
+
+<p>The File Menu contains traditional "New", "Open", "Save" and "Save As" items. Choosing File|New creates a new empty tab, which can be populated either manually or using copy and paste operations from other tabs. The "save" operations store entire worksheet to a file. The format of such file is XML representation of preferences, described in <a href="http://java.sun.com/j2se/1.5.0/docs/api/java/util/prefs/Preferences.html">Java Preferences API</a>. It also contains "Save as HTML" item, applicable to the current tree.</p>
+
+<p><b>Note </b>that File Menu operations work with tabs, not individual nodes. If you want, for example, to save a node's subtree to a file, choose Copy from the context menu of this node, then choose File|New to create a new (worksheet), and choose Paste for the root of that worksheet. Then save this worksheet to a file.</p>
+
+<p>The Edit Menu contains operations applicable to preferences associated with selected node: add a new key-value pair, and remove all of them.<br></p>
+
+<p>The View Menu contains items "Expand subtree" and "Collapse subtree" with obvious meaning. If no node is selected, the root node is assumed. </p>
+<p>The View Menu also contains the "Look and Feel" item, which allows you to choose among available LaFs. By default, only the standard LaFs are available. If you want to add more LaFs (like JGoodies Looks or JavaSoft's Synthetica), download the jar file and add it to the class path of this program. In this case the command line to start the program would look like this (on Unix replace semicolon by colon):</p>
+</font>
+<pre>
+java -cp prefs.jar;looks.jar org.bbg.prefs.Main
+</pre>
+<font face="arial,sans-serif">
+<p>In the View Menu choose "Look and Feel" and then "Add another L&F". The program will scan all jar files in the class path and show you all classes there, which implement javax.swing.LookAndFeel. Select any of them and their names will appear in the "Look and Feel" Menu.</p>
+<br><hr>
+</font>
+</body>
+</html>

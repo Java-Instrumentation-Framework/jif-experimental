@@ -1,0 +1,4 @@
+D:\__Dev_Current\_IJ_Projects\_IJ_PSj\plugins\Jython\
+D:\_development\Jython\JyTools\jinsitu\jinsitu\JinSitu.py
+jython D:\_development\Jython\JyTools\jyinfo.py
+

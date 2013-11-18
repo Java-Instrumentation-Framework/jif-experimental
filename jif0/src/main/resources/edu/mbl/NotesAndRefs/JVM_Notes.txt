@@ -1,0 +1,97 @@
+JVM Args, etc...
+
+=======================================
+Passing in properties to the JVM
+-D<property>=<value>
+
+----------------------
+Look & Feel
+-Dswing.defaultlaf=
+Start your VM with 
+  -Dswing.defaultlaf=org.jvnet.substance.skin.SubstanceBusinessLookAndFeel
+in source: 
+  UIManager.setLookAndFeel(new SubstanceBusinessLookAndFeel())
+  UIManager.setLookAndFeel("org.jvnet.substance.skin.SubstanceBusinessLookAndFeel")
+----------------------
+GUI / 2D-related
+
+-Dsun.java2d.d3d=false 
+-Dsun.java2d.noddraw=true 
+-Dsun.java2d.ddoffscreen=false
+-Dswing.bufferPerWindow=false 
+
+-Dawt.nativeDoubleBuffering=true (shows all repaints)
+
+System.setProperty("sun.awt.noerasebackground", "true");
+
+Toolkit.getDefaultToolkit().setDynamicLayout(true);
+Toolkit.getDefaultToolkit().getDesktopProperty("awt.dynamicLayoutSupported");
+
+-Dswing.aatext=true Font anti-aliasing 
+
+------------------------
+-Xverify:none (this switch turns off Java bytecode verification, making classloading faster)
+----------------------
+OpenGL
+java -Dsun.java2d.opengl=true 
+  or
+System.setProperty("sun.java2d.opengl", "true");
+----------------------
+-Djava.security.policy=applet.policy
+-----------------------
+JNI:
+-Djava.library.path=/...
+---------------------
+Debugging
+-verbose:[jni | class | gc]
+-Xcheck:jni
+-Xlint:path - Shows classpath errors that wouldn't otherwise appear
+----------------------
+Crash Error Log File:
+-XX:ErrorFile=/var/log/java/java_error%p.log
+(Defaults to dir in TMP or TEMP env. variable)
+String variable = System.getenv("WINDIR");
+------------------------
+Enviroment Variables:
+Java > 1.5
+Map<String, String> variables = System.getenv();
+for (Map.Entry<String, String> entry : variables.entrySet()) {
+   String name = entry.getKey();
+   String value = entry.getValue();
+   System.out.println(name + "=" + value);
+}
+----------------------
+Garbage collection
+
+-Xincgc
+
+-XX:+UseConcMarkSweepGC or -J-XX:+UseParNewGC - try these switches if you are having problems with intrusive garbage collection pauses. 
+This switch causes the JVM to use different algorithms for major garbage collection events (also for minor collections, if run on a 
+multiprocessor workstation), ones which do not "stop the world" for the entire garbage collection process. 
+You should also add the line -J-XX:+CMSClassUnloadingEnabled and -J-XX:+CMSPermGenSweepingEnabled to your netbeans.conf 
+file so that class unloading is enabled (it isn't by default when using this collector).
+
+-XX:+UseAdaptiveSizePolicy - this switch may help improve garbage collector throughput and memory footprint. 
+It is part of garbage collector ergonomics implemented in JDK5.0.
+
+-XX:+UseParallelGC - some tests have shown that, at least on systems fairly well equipped with memory, 
+the durations of minor garbage collections is halved when using this collection algorithm, on uniprocessor systems. 
+Note that this is paradoxical - this collector is designed to work best on multiprocessor systems with gigabyte heaps. 
+No data is available on its effect on major garbage collections. Note: this collector is mutually exclusive with -J-XX:+UseConcMarkSweepGC. . 
+The measurements supporting the use of this algorithm can be found on the performance website.
+
+-XX:+PrintGCDetails - this is similar switches (like -J-verbose:gc) do not improve performance but provide diagnostic data 
+showing information about memory management that are useful source of input for performance tuning. Another way how to 
+obtain these data is to use monitoring tools or (NetBeans) profiler.
+
+-XX:CompileThreshold=100 - this switch will make startup time slower, by HotSpot to compile many more methods down 
+to native code sooner than it otherwise would. The reported result is snappier performance once the IDE is running, 
+since more of the UI code will be compiled rather than interpreted. This value represents the number of times a 
+method must be called before it will be compiled.
+
+-Djava.net.preferIPv4Stack=true - this switch will suppress use of IPv6 stack in networking code and it can avoid
+small delay during startup when inet address is being resolved. It will be usefull only on a system where IPv6 is 
+installed but not actually configured.
+
+
+

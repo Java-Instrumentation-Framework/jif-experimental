@@ -1,0 +1,122 @@
+Configurable
+
+CameraModel.type
+
+Shutters
+IllumModel.SHUTTERTYPEEPI_DEFAULT = "ZEISS"
+IllumModel.SHUTTERTYPEXMIS_DEFAULT = "ZEISS"
+
+"uniblitz2.commPort", "COM11"
+"shutter.epi.type", "ZeissAxiovert200M"
+"shutter.xmis.type","UNIBLITZ_2"
+
+getPreferences().get("zeiss.commPort", "COM11");
+
+getPreferences().get("variLC.commPort", "COM3");
+
+
+getInt("stageXY.commPortX", 11);
+getInt("stageXY.commPortY", 12);
+get("laser.commPort", "COM17");
+
+
+Test
+
+Focus
+
+InstrumentController
+
+"camera.enabled");
+"illum.enabled");
+"vlc.enabled");
+"stageXY.enabled");
+"stageZ.enabled");
+"laser.enabled");
+"surgeon.enabled");
+"lightField.enabled");
+
+boolean        
+"app.auditoryFeedback", true)) 
+"app.alwaysOnTop", t);
+"instruments", true);
+"deBug", true);
+"logOutErr", false)
+"checkEDT"
+"checkRepaint"
+
+/////////////////////////////////////////////////////////////////////////
+PREFS /edu/mbl/jif/camera/camacq
+a0	0.2725889980792999
+a1	0.2
+a2	0.2725889980792999
+a3	0.2725889980792999
+a4	0.1763245016336441
+alwaysOnTop	false
+auditoryFeedback	true
+autoSave	true
+b0	0.5554727911949158
+b1	0.5554727911949158
+b2	0.6923536062240601
+b3	0.4974185824394226
+b4	0.5554727911949158
+binningX	2
+binningY	2
+camera.enabled	true
+cameraEnabled	true
+commPort	
+commPortName	COM17
+coolerActive	false
+deBug	true
+depth	8
+displacementX	-1
+div	true
+enableLightField	false
+enabledSurgeon	true
+exposureAcq	4.02
+exposureStream	5.0
+fileCounter	4
+filePrefix	img
+flipImage	false
+gainAcq	1.3
+gainStream	1.2
+ijPutOnDesk	true
+illum.enabled	true
+illumEnabled	true
+imageDirectory	C:\Documents�and�Settings\GBH\My�Documents
+imageFileFormat	jpeg
+imagesInSequence	3
+initDelay	0.0
+interval	2.0
+laser.enabled	true
+laserEnabled	true
+levelEpi	0.74
+lghtField.enabled	true
+logOutErr	false
+mainFrameH	793
+mainFrameW	588
+mainFrameX	507
+mainFrameY	10
+mirrorImage	false
+multiFrame	1
+multiFrameBkgd	5
+offsetAcq	20.0
+offsetStream	20.0
+openEpi	true
+openXmis	false
+putInStack	false
+sameSetAcqStream	false
+selectedSetting	2
+seqInStack	true
+settleTime	60
+speed	20.0
+stageXY.enabled	true
+stageXYEnabled	true
+stageZ.enabled	true
+surgeon.enabled	true
+swing	0.1
+toleranceFine	0.0010
+useFilenamePrefix	true
+vlc.enabled	true
+vlcEnabled	true
+wavelength	540.0
+zeroIntensity	4

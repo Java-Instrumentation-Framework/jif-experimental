@@ -1,0 +1,34 @@
+Jif Changes...
+
+- Replace TimerHR & NanoTimer with plx.HiresClock/Timer
+
+For Properties Viewer: run
+java -cp Jif0.jar edu.mbl.jif.utils.props.PropsWassup
+
+==========================================
+FileChooserTweak for Windows Zip Issue
+
+Disable:
+C:\> regsvr32 /u %windir%\system32\zipfldr.dll
+
+Or use VFSJFileChooser
+
+Supposedly fixed in 1.6.10+
+
+And...
+
+To avoid this problem, and ensure that ZIP and Compressed Folder support is totally
+and permanently disabled in XP, continue with the steps below after running
+unregistration command above.
+
+Run Registry Editor (RegEdit.exe in Run command), and search for Zipfldr.dll in the registry.
+Delete all instances of Zipfldr.dll found. 
+There should be only one instance of it after unregistering.
+
+Reboot the computer system to unload the DLL from memory, in case it still persists.
+
+Delete or rename Zipfldr.dll file from \Windows\System32\DLLCache\ folder.
+
+Delete or rename Zipfldr.dll file from \Windows\System32\ folder.
+When prompted by WFP (Windows File Protection) saying that system stability may be affected,
+answer “No” or click “OK” on the dialog window pop up.

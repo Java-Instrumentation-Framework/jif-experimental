@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DockingDesktop version="2.0">
+<DockingPanel>
+<Split orientation="1" location="0.19927536231884058">
+<Dockable>
+<Key dockName="history"/>
+</Dockable>
+<Split orientation="0" location="0.8359133126934984">
+<Dockable>
+<Key dockName="browser"/>
+</Dockable>
+<Dockable>
+<Key dockName="log"/>
+</Dockable>
+</Split>
+</Split>
+</DockingPanel>
+<Border zone="2">
+</Border>
+<Floating x="160" y="312" width="220" height="313">
+<Dockable>
+<Key dockName="rss"/>
+<RelativePosition x="0.0" y="0.5031746029853821" w="0.19927535951137543" h="0.4968253970146179" />
+<PreviousState state="1"/>
+</Dockable>
+</Floating>
+<TabGroups>
+</TabGroups>
+</DockingDesktop>

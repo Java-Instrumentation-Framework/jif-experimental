@@ -1,0 +1,158 @@
+NetBeans Notes - GBH
+
+NetBeans 6
+Move/copy up/down: (Alt|Ctrl)-Shift-(Up|Down): selection is (copied|moved) right (above|below) the current selection.
+Capture inner/outer syntactic element: Alt-Shift-Period selection expands to a successively wider syntactic element.  Alt-Shift-Comma narrows it.
+Generate code skeletons: Alt-Insert for popup list.
+Inplace rename: Ctrl-R, all instances of the item turn blue and change on edit, Escape to end. 
+Add/Remove comment lines: Ctrl-/ toggle selected lines as commented (or Ctr-lAlt-W)
+Inspect members/hierarchy: Alt-F12 to display the ancestors of the current file; Ctrl-F12, the current file's members are displayed, as shown here: 
+Switch between documents: Ctrl and Tab, for popup of open documents
+Jump to last edit: Ctrl-Q.
+Bookmarks: Ctrl-Shift-M, toggle bookmark. cycle back/forward with Ctrl-Shift-Period and Ctrl-Shift-Comma).  
+Highlight exit points: Place the cursor on the return type to see all exit points highlighted.
+
+
+-------------------- NetBeans Keyboard Shortcuts --------------------
+
+Alt-Enter   invokes the editor hint
+(you have to be on the line which is underlined with error mark so that this works(!)
+
+Alt-Shift-F Fixes imports, fast and knows how to resolve conflicts
+
+Ctrl-Shift-F  reFormat code
+Ctrl+T        Indent
+Ctrl+Shift+T  Comment
+
+Ctrl+;          ; at end of line
+Ctrl+Shift+;    ; at end of line + newLine, indented
+
+
+--- Select ------------------------------------------------------------
+
+Alt+Shift+S successively selects outer syntactic element. 
+    Statement -> Surrounding Block Statements -> Surrounding Block Statements -> 
+    Surrounding Method -> Surrounding Class and so on. 
+    For quick selection for indentation using Ctrl+T or commenting using Ctrl+Shift+T.
+
+Alt+Shift+A successively selects inner syntactic element. This works only if you had expanded the selection using the Alt+Shift+S. 
+    Helps to fine tune the selection if you went too far. 
+
+Ctrl-A: select all, works in all kinds of dialogs
+
+Alt+Shift+Left: Previous Inner View (Source <--> Design view)
+Alt+Shift+Period
+
+Ctrl+Shift+ {   Extend Selection to Matching Brace
+
+
+Ctrl+ J, then D Debug Identifier
+
+
+
+--- Edit ---------------------------------------------------------------
+Ctrl-E  deletes current line 
+
+
+--- AutoCompletion ----------------------------------------------------
+Ctrl-Space  AutoComplete
+Ctrl-K / L  AutoCompletion using matching words in open buffers.
+Alt-P - method parameters in code completion
+
+
+--- Search ------------------
+
+Ctrl-Shift-P    Find in Projects.
+
+Ctrl-F  Find - Search for text in the currently selected file. The Source Editor jumps to the first occurrence of the string and highlights all matching strings.
+
+Ctrl-H  Replace text in the currently selected file.
+
+F3  Find the next occurrence of the word you searched for.
+
+Ctrl-F3/Shift-F3    Search for the next/previous occurrence of the word that the insertion point is on.
+
+Alt-Shift-H Toggle on/off search result highlighting.
+
+Ctrl-Shift-O    Switch to the Search Results window.
+
+
+--- Navigate -------------------------------
+
+Ctrl-G  Go to line.
+
+Ctrl-7  QuickSearch: text: move to navigator and quick search for any method/field, enter to jump
+
+Alt-O or Ctrl-mouse-click   Go to Source. Jumps to the source code for the currently selected 
+class, method, or field, if the source is available. 
+Alternately, you can hold down the Ctrl key and hover the mouse over the identifier and then click the identifier 
+when it is underlined in blue. (works also outside java code)
+
+Alt-left/right arrow    move to the class in the left/right opened editor
+
+Alt-Shift-O Open an arbitrary class, very fast, doesn't depend on package
+
+Ctrl-1/2/3  move to projects/files/favorites
+
+Alt-G   Go to Declaration. Similar to the previous shortcut, this opens the file where the variable at the insertion point 
+is declared.
+
+Ctrl-B  Go to Super Implementation. Jumps to the super implementation of the currently selected method
+(if the selected method overrides a method from another class or is an implementation of a method defined in an interface).
+
+Alt-P   show method arguments
+
+
+--- Jump List ---------------------------------
+
+The jump list is a history of all locations where you made modifications in the Editor.
+
+Alt-L/K Forward/Back (in the currently selected file)
+
+Alt-Shift-L/K   Go to the next/previous jump list location in all files (not the currently selected file).
+
+
+--- Bookmarks ----------------------------------
+
+Ctrl-F2 Toggle Bookmark. Add/remove a bookmark (bookmark icon) to the line of code at the insertion point 
+
+F2  Next Bookmark. 
+
+Shift-F2    Previous Bookmark. 
+
+
+
+=================================================================
+Fix Javac java lang OutOfMemoryError
+
+When javac is compiling a large number of java source files, it may fail with java.lang.OutOfMemoryError:
+
+The system is out of resources.
+Consult the following stack trace for details.
+java.lang.OutOfMemoryError: Java heap space
+
+It's no different than OutOfMemoryError in other java applications. When you run javac in Sun JDK, it's invoking com.sun.tools.javac.main.Main located in %JAVA_HOME%\lib\tools.jar.
+
+If you are compiling with javac task in Apache Ant, set fork attribute to true, to run javac in a separate process with its own heap size settings. If fork is set to false, or not set (default is false), javac will run in the same process as Ant, which has a default maximum heap size of 64m.
+
+      srcdir="${basedir}/src"
+      destdir="${basedir}/build/classes"
+      classpath="${project.classpath}"
+      memoryinitialsize="256m"
+      memorymaximumsize="256m">
+
+Setting fork to true will also limit any memory leaks in javac implementation to its own child process, without affecting the parent Ant process.
+
+If setting fork, memoryInitialSize, and memoryMaximumSize still doesn't fix the problem, you can execute javac task several times, each javac compiling a subset of your source tree. But this should really be the last rescort, since you are now managing source code dependency, which should be javac's business. You will need to decide which modules get compiled first, and classes in certain modules cannot have direct references to classes in certain other modules, and so on. I'd rather increase the memoryMaximumSize to 2g.
+
+If you don't want to modify existing build.xml files, another option is to increase the heap size for Ant JVM and still execute javac task in-process. You just need to set environment variable ANT_OPTS:
+
+export ANT_OPTS="-Xms256m -Xmx256m"    (ksh/bash)
+setenv ANT_OPTS="-Xms256m -Xmx256m"    (tcsh/csh)
+set ANT_OPTS="-Xms256m -Xmx256m"       (Windows)
+
+A disadvantage of this approach is users will need to remember to set this environment variable, or use some sort of wrapper script on top of %ANT_HOME%\bin\ant.bat, or $ANT_HOME/bin/ant.
+
+If you are invoking javac directly, you can also increase the heap size for the underlying JVM:
+
+javac -d build/classes -classpath ... -J-Xms256m -J-Xmx256m

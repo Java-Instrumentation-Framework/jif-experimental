@@ -1,0 +1,58 @@
+The default configuration file is located at
+jre/lib/logging.properties    
+Specify with VM arg:
+-Djava.util.logging.config.file=configFile
+
+To keep the standard log manager and still bypass the initialization 
+from the logging properties file: Set the java.util.logging.config.class 
+system property to the name of a class that sets log manager properties 
+in some other way.
+
+
+            final int LOG_ROTATION_COUNT = 10;
+            Handler handler = new FileHandler("%h/LoggingImageViewer.log", 0,
+                  LOG_ROTATION_COUNT);
+static {
+        String userHome = System.getProperty("user.home", ".");
+        String FILE_SEPARATOR = System.getProperty("file.separator", "/");
+        String logFileName = userHome + FILE_SEPARATOR + "_Application_Log.log";
+
+        // set up logging for errors
+        
+        // redirect System.out as well as System.err and append to existing log
+        LogStdStreams.initializeErrorLogging(logFileName,
+                "Log File for _Application_ " + new Date(), true, true);
+    }
+    
+
+    // in every class...    <log>
+    final static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
+    
+    logger.setLevel(Level.FINEST);
+    logger.finer("test finer");
+    logger.info("test info");
+    logger.severe("test severe");
+    logger.finer("About to create new ExampleLoggingApplication()");
+
+
+    logger.throwing(logger.getName(), "main", new RuntimeException("throw a RuntimeException"));
+    logger.throwing(this.getClass().getName(), "myMethod", ex);
+    logger.log(Level.SEVERE, "Log a badObject {0} {1}", new Object[]{"string", application.badObject});
+            
+            
+    // entering/exiting <logenter>
+    logger.entering(this.getClass().getName(), "<init>");
+    // ... 
+    logger.exiting(this.getClass().getName(), "<init>");
+        
+    // Sample method to show argument logging
+    private void method1(String str1, Object obj1, Object obj2) {
+        Object args[] = {"String:", str1, "Object1:", obj1, "Object2:", obj2};
+        logger.entering(this.getClass().getName(), "method1", args);
+        // ... method code here
+        logger.exiting(this.getClass().getName(), "method1");
+    }
+
+// For a caught exception: <logx>
+ logger.log(Level._, "explanation", ex);

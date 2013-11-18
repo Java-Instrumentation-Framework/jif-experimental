@@ -1,0 +1,17 @@
+// ModelSpecificPrefs
+
+    static final String DEFAULT_PREFS_KEY = "";
+
+    Preferences prefs;
+
+    public Model(InstrumentController instCtrl) throws Exception {
+        this(instCtrl, DEFAULT_PREFS_KEY);
+    }
+
+    public Model(InstrumentController instCtrl, String key) throws Exception {
+        initializePreferenceAdapters(key);
+
+
+    public void initializePreferenceAdapters(String key) {
+        prefs = CamAcqJ.getInstance().getPreferences().node(key);
+        // ... PrefAdapters

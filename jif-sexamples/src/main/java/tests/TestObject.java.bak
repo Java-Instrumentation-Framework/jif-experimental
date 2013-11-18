@@ -1,0 +1,42 @@
+package jfw.examples;
+
+import java.io.Serializable;
+
+/**
+ * Object for Testing Object
+ */
+
+public class TestObject
+    implements Serializable {
+  static String s = "scoobie-doo\n"+
+      "lajkLJHADSF;LJAS;LKDFJLAKSDFAS \n" +
+      "ASDFASDFASDFASDFASDFASDFASFDASDF\n" +
+      "ASDFA ADSF ASDF ASDFASDF ASFADS FADS FASFD \n" +
+      "ADS FASD FASDF AF ASDF AS\n" ;
+
+  static int x = 2;
+
+  public TestObject() {
+  }
+
+
+  public String getS() {
+    return s;
+  }
+
+  public void setS(String _s) {
+    s = _s;
+  }
+
+  public int getX() {
+    return x;
+  }
+
+  public void setX(int _x) {
+    x = _x;
+  }
+  public String toString() {
+    return(s + ", " + x);
+  }
+
+}

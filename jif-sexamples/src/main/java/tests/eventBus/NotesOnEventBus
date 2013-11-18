@@ -1,0 +1,251 @@
+// SUBSCRIBER ----------------------------------------------------------------
+
+import org.bushe.swing.event.*;
+
+public class MyEventConsumer implements EventSubscriber {
+
+   /*
+   1. The event consumer implements the EventSubscriber<T> interface indicating the event object type in T.
+   2. Now write the onEvent(T object) where T is the object type declared above.
+   3. The consumer now subscribes to the bus, EventBus.subscribe(T obj, EventSubscriber<T> sub),
+   passing in the event object class and the EventSubscriber implementation respectively.
+   */
+
+// Setup - subscribe to interested events
+
+private void setup() {
+	EventBus.subscribe(ActionEvent.class, this);
+}
+
+// This method wil be called when the publisher publishes ActionEvent
+
+public void onEvent(ActionEvent aEvt) {
+	// Do something with it...
+}
+
+
+// PUBLISHER ------------------------------------------------------------------
+
+import org.bushe.swing.event.*;
+
+public class MyEventProducer implements ActionListener {
+
+private JButton button;
+
+public void setup() {
+	button = new JButton("OK");
+	//Add a listener to catch all button events
+	button.addActionListener(this);
+}
+
+//Listener called when button is pressed
+public void actionPerformed(ActionEvent aEvt) {
+	//Now we publish it once
+	EventBus.publish(aEvt);
+}
+
+/* The onEvent() method will be called for all T and subclass of T;
+this means that the onEvent() method will be called for ActionEvent and all its subclass.
+If you are interested in only a particular class, use subscribeExactly()
+instead of subscribe() like so:
+*/
+
+EventBus.subscribeExactly(ActionEvent.class, this);
+
+
+
+// Types ---------------------------------------------------
+
+     // Subscriber ---
+     public class TradeSubscriber implements EventSubscriber {
+        public TradeSubscriber() {
+           TypeReference<List<Trade>> subscribingTypeReference = new TypeReference<List<Trade>>(){};
+           EventBus.subscribe(subscribingTypeReference.getType(), this);
+        }
+        public void onEvent(Object object) {
+        }
+     }
+
+     // Publisher ---
+     List<Trade> trades = new ArrayList<Trade>();
+     trades.add(trade);
+     TypeReference<List<Trade>> publishingTypeReference = new TypeReference<List<Trade>>(){};
+     // then...
+     EventBus.publish(publishingTypeReference.getType(), trades);
+
+
+// Topics --------------------------------------------------------------
+
+// Implement EventTopicSubscriber instead of EventSubscriber
+public class MyEventConsumer implements EventTopicSubscriber {
+
+private void setup() {  // Setup - subscribe to interested events
+	//Subscribe to "OK" topic
+	EventBus.subscribe("OK", this);
+}
+
+// This method wil be called when the publisher publishes an event object on the topic that we have subscribed to.
+public void onEvent(String topic, Object obj) {
+	//Do something with it ...
+}
+
+// subscribe to topics based on Regular Expression:
+
+private void setup() {
+	//Subscribe to any topics that looks like an "OKEvent"
+	EventBus.subscribe(new Pattern("*OKEvent*"), this);
+}
+
+// The producer now publishes the event on a particular topic in the following manner:
+
+public void actionPerformed(ActionEvent aEvt) {
+	String cmd = aEvt.getActionCommand();
+	// Now we publish it based on different button types
+	if (cmd.equals("OK"))
+		EventBus.publish("OKEvent", aEvt);
+	else if (cmd.equals("Cancel")) {
+	}
+
+
+
+///////////////////////////////////////////
+
+TopicStyleReader danila = new TopicStyleReader("10 Elm St");
+Pattern topicPattern = Pattern.compile("News*");
+eventService.subscribe(topicPattern, danila);
+
+
+public class EBProgressBar extends JProgressBar implements EventSubscriber {
+
+  EBProgressBar(...) {
+      EventBus.subscribe(ProgressEvent.class, this);
+  }
+
+  public void onEvent(EventServiceEvent evt) {
+    ProgressEvent pEvent = (ProgressEvent)evt;
+    /...
+	  if (pbEvent.getMax() != null) {
+            setMaximum(pbEvent.getMax().intValue());
+        }
+	  repaint();
+  }
+
+//Data Service Publication
+EventBus.publish(new ProgressEvent(this,percentComplete));
+
+
+public class EBCancelableVieledProgressPane extends
+        CancelableProgressPanel implements EventSubscriber {
+    public EBCancelableVieledProgressPane(JComponent compToVeil,
+                                    EventService eventService) {
+        super(text, 12, 0.35f, 15.0f, 100);
+        this.compToVeil = compToVeil;
+        eventService.subscribe(ProgressEvent.class, this);
+    }
+   public void onEvent(EventServiceEvent evt) {
+      ProgressEvent progressEvent = (ProgressEvent)evt;
+      if (progressEvent.getValue() > 0.00001d) {
+            compToVeil.getRootPane().setGlassPane(this);
+            start();
+         }
+         setText(progressEvent.getPreString());
+      } else {
+         stop();
+         compToVeil.getRootPane().setGlassPane(lastGlassPane);
+      }
+
+
+
+
+//////////////////////////////////////////////////
+
+public class DataService implements EventSubscriber, EventTopicSubscriber{
+    private MLFBSession mlfbSessionBean;
+    private Executor singleThreadedExecutor =
+                             Executors.newSingleThreadExecutor();
+
+    public void init() {
+      //Gets server session bean
+      hookUpToServer();
+      //Create a special event service for handling queries
+      EventService queryEventService = new
+                                    ThreadSafeEventService(250L);
+      EventServiceLocator.setEventService("QueryEventServiceBus",
+                                    queryEventService);
+      queryEventService.subscribe(QueryRequestEvent.class, this);
+…
+      EventBus.subscribe("Cancel", this);
+    }
+}
+
+
+public HitterStatsUIComponent() {
+…
+public void actionPerformed(ActionEvent evt) {
+   EventService queryEventService =
+        EventServiceLocator.getEventService("QueryEventService");
+   final String queryId = getNextQueryId();
+   EventBus.subscribeStrongly(QueryCompletionEvent.class, new
+            EventSubscriber() {
+      public void onEvent(EventServiceEvent evt) {
+         QueryCompletionEvent event = (QueryCompletionEvent) evt;
+         if (event.getQueryId() != queryId) {
+            //not our query
+            return;
+         }
+         EventBus.unsubscribe(QueryCompletionEvent.class, this);
+         setPlayers(event.getResult());
+      }
+  });
+  queryEventServiceBus.publish(new QueryRequestEvent(getQuery() + "", queryId, this));
+
+
+public void onEvent(EventServiceEvent evt) {
+  final QueryRequestEvent queryEvent=(QueryRequestEvent)evt;
+  publishProgress(10, "Starting...");
+  singleThreadedExecutor.execute(new Runnable() {
+     public void run() {
+        publishProgress(20, "Issuing query...");
+        List result = runQuery(queryEvent.getQuery());
+        publishProgress(75, "Got results, processing...");
+        if (!currentRequestIsCanceled) {
+           EventBus.publish(new QueryCompletionEvent(
+                  result, queryEvent.getQueryId(), this));
+           publishProgress(100, "Complete");
+        }
+        publishProgress(0, "Reset");
+        currentRequestIsCanceled = false;
+}}
+public void onEvent(String string, Object object) {
+      currentRequestIsCanceled = true;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * Publish Nodes on the Container EventService
+    - PopulatePreferencesNodeEvent publishes a Preference Node to
+      the container’s components for saving user preferences
+    -  ApplyPreferencesNodeEvent publishes a Preference Node to
+      the container’s components for reading and applying the previously saved values
+No Listeners
+No interfaces required (convenience interfaces are supplied)
+//
+ public class PrefContainerAdapter implements EventHandler {
+public PrefContainerAdapter(JComponent jComp,
+    PrefComponent prefComponent) {
+   this.prefComponent = prefComponent;
+   new ContainerEventServiceRegistrar(jComp, this, new
+           Class[]{ApplyPreferencesNodeEvent.class,
+                   PopulatePreferencesNodeEvent.class});
+}
+public void handleEvent(EventServiceEvent evt) {
+   if (evt instanceof ApplyPreferencesNodeEvent) {
+      prefComponent.applyPreferences(
+            (ApplyPreferencesNodeEvent)evt).getNode());
+   } else if (evt instanceof PopulatePreferencesNodeEvent) {
+      prefComponent.populateNode(
+            (PopulatePreferencesNodeEvent)evt).getNode());
+   }
+}
+ */

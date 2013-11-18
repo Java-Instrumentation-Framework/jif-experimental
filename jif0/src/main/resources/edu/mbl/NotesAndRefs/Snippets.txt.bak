@@ -1,0 +1,312 @@
+//===================================================================
+// *** Disabling System.exit() ***
+//===================================================================-
+
+private static class ExitTrappedException extends SecurityException {
+  private static void forbidSystemExitCall() {
+    final SecurityManager securityManager = new SecurityManager() {
+      public void checkPermission( Permission permission ) {
+        if( "exitVM".equals( permission.getName() ) ) {
+          throw new ExitTrappedException() ;
+        }
+      }
+    } ;
+    System.setSecurityManager( securityManager ) ;
+  }
+  private static void enableSystemExitCall() {
+    System.setSecurityManager( null ) ;
+  }
+}
+
+// Usage: 
+    forbidSystemExitCall();
+    try {
+      // Call the "exiting" code here...
+    } catch( ExitTrappedException e ) {
+    } finally {
+      enableSystemExitCall() ;
+    }
+
+//===================================================================
+// *** SwingWorker ***
+//===================================================================
+class SwingWorker<T,V> implements FutureRunnable<T> {
+    abstract T doInBackground() throws Exception
+    void done()
+    void publish(V... chunks)
+    void process(List<V> chunks)
+    void setProgress(int i)
+    int getProgress()
+    Status getStatus()
+
+    void execute()
+
+    T get()
+    void cancel
+    boolean isDone()
+    ...
+}
+
+
+// For Application Startup..................................
+
+SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+    @Override 
+    protected Void doInBackground() {
+        for (int i = 0; i < N; i++) {
+          loadResource(i);
+          setProgress(i/N);
+        }
+        return null;
+    }
+    @Override
+    protected void done() {
+        createAndShowGUI();
+    }
+};
+worker.execute();
+
+//==============================
+// SplashScreen update code
+PropertyChangeListener progressListener = new PropertyChangeListener() {
+    public void propertyChange(PropertyChangeEvent e){
+        if (“progress” == e.getPropertyName()) {
+            SplashScreen splashScreen = SplashScreen.getSplashScreen();
+            Graphics2D g2d = splashScreen.createGraphics();
+            //paint progress to g2d
+            splashScreen.update();
+        }
+    }
+};
+worker.addPropertyChangeListener(progressListener);
+
+
+// *** Synchronous actionPerformed with SwingWorker..........
+
+actionPerformed(ActionEvent e) {
+    SwingWorker<Result, Void> worker =
+        new SwingWorker<Result, Void>() {
+            @Override Result doInBackground() {
+                return doSomethingLengthy();
+            }
+            @Override void done() {
+                displayResult(get());
+            }
+        };
+    worker.execute();
+}
+
+
+// ** Synchronous, with Dialog............................
+
+actionPerformed(ActionEvent e) {
+    JDialog workerDialog; //modal dialog
+    SwingWorker<Result, Void> worker =
+        new SwingWorker<Void, Result>() {
+            @Override Result doInBackground() {
+                return doSomethingLengthy();
+            }
+            @Override void done() {
+                workerDialog.dispose();
+                displayResult(get());
+            }
+    };
+    worker.execute();
+    workerDialog.setVisible(true);
+}
+
+
+// Custom executors........................................
+
+Executor executor = Executors.newSingleThreadScheduledExecutor();
+//...
+worker.cancel();
+worker = new Worker(x,y);
+executor.schedule(worker, 1, TimeUnit.SECONDS);
+
+
+
+// Check if EDT is responsive - ‘Pulse’ javax.swing.Timer.....
+
+Timer pulse = new Timer(1000 / 10,
+    new ActionListener() {
+        private long lastTime = System.nanoTime();
+        public void actionPerformed(ActionEvent e) {
+            long now = System.nanoTime();
+            if (now - lastTime > THRESHOLD) {
+                //it is not responsive. Log it.
+            }
+        lastTime = now;
+    }
+});
+pulse.start();
+
+//===================================================================
+// *** Eumerations ***
+//===================================================================
+public enum Importance {
+    LOW("Low priority"),
+    MEDIUM("Medium prority"),
+    HIGH("High priority"),
+    CRITICAL("Critical priority");
+
+    private String description;
+
+    private Importance(String desc) {
+        description = desc;
+    }
+
+    @Override
+    public String toString() {
+        return description;
+    }
+}
+
+//==============================================================
+// Adding behavior to the enum
+// using Template Method design pattern...
+
+    private enum Week {
+        Sunday {
+           @Override
+            public void execute() {
+                System.out.println("Mom and Dad diner.");
+            } 
+        }, Monday {
+            @Override
+            public void execute() {
+                System.out.println("Take the garbage out.");
+            } 
+        }, Tuesday {
+            @Override
+            public void execute() {
+                System.out.println("Do the laundry.");
+            } 
+        }, Wednesday {
+            @Override
+            public void execute() {
+                System.out.println("Have a beer. Just Chill out!");
+            } 
+        }, Thursday {
+            @Override
+            public void execute() {
+                System.out.println("Go out to the local store for Grocery with shoping list.");
+            } 
+        }, Friday {
+            @Override
+            public void execute() {
+                System.out.println("Take the garbage out.");
+            } 
+        }, Saturday {
+            @Override
+            public void execute() {
+                System.out.println("Manchester vs Arsenal! Can't miss that!");
+            } 
+        };
+        
+        public abstract void execute();
+    }
+    
+    public static void main(String[] args) {
+        final Week today = getToday();
+        today.execute();
+    }
+
+//=========================================================================================
+// Reverse Lookups
+
+public final enum Status 
+{
+     WAITING(0),
+     READY(1),
+     SKIPPED(-1),
+     COMPLETED(5);
+
+     private static final Map<Integer,Status> lookup 
+          = new HashMap<Integer,Status>();
+
+     static {
+          for(Status s : EnumSet.allOf(Status.class))
+               lookup.put(s.getCode(), s);
+     }
+
+     private int code;
+
+     private Status(int code) {
+          this.code = code;
+     }
+
+     public int getCode() { return code; }
+
+     public static Status get(int code) { 
+          return lookup.get(code); 
+     }
+}
+
+//===================================================================
+// ComboBox with Enum
+//===================================================================
+/** Define enum class that will popuplate your combo box */
+public enum E_ComboBoxEnum {
+
+    Item1("Item 1"),
+    Item2("Item 2"),
+    Item3("Item 3");
+
+    private final String _displayName;
+
+    /** constructor */
+    E_ComboBoxEnum(final String displayName) {
+        _displayName = displayName;
+    }
+
+    /** overrides method toString() in java.lang.Enum class */
+    public String toString(){
+         return _displayName;
+    }
+
+} // end enum E_ComboBoxEnum
+
+/** whatever class contains the JComboBox object, could be JFrame, JDialog, etc */
+public class ComboBoxGUI extends javax.swing.JDialog {
+
+    private javax.swing.JComboBox _myComboBox;
+
+    public void createComboBox(){
+
+      _myComboBox = new javax.swing.JComboBox();
+      /** model is set to be a new instance of DefaultComboBoxModel. this model
+      is initialized with an array of all possible values of E_ExpirationDateIntervals */
+      _myComboBox.setModel(new javax.swing.DefaultComboBoxModel(E_ExpirationDateIntervals.values()));
+    }
+
+    /** the combo box will now display the Strings defined in the E_ComboBoxEnum class,
+    in the order that they were defined. */
+
+    /** _myComboBox.getSelectedItem() will return an E_ComboBoxEnum object
+    (well technically a generic object that can be cast into an E_ComboBoxEnum object) */
+
+} // end class ComboBoxGUI
+
+//===================================================================
+// String.format() - like printf()
+//===================================================================
+	static private final String JAR_PATH = "%s/plugin%d.jar";
+
+	String dir = "";
+	int index = 3;
+	String jarPath = String.format(JAR_PATH, dir, index);
+
+//===================================================================
+// Window Positioning
+//===================================================================
+ setLocationByPlatform(true);
+ setVisible(true);
+ boolean flag = isLocationByPlatform();
+
+// or set System Property "java.awt.Window.locationByPlatform"
+//===================================================================
+// Logging
+//===================================================================
+   Logger.getLogger(OpenSwingWorker.class.getName()).log(Level.SEVERE, null, ex);
+

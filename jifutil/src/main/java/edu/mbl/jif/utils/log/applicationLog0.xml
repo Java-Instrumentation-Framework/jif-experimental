@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<?xml-stylesheet type="text/xsl" href="logger.xsl"?>
+<log>
+<record>
+  <date>2007-12-13T20:15:06</date>
+  <millis>1197594906640</millis>
+  <sequence>0</sequence>
+  <logger>edu.mbl.jif.utils.log.ExampleLoggingApplication</logger>
+  <level>FINER</level>
+  <class>edu.mbl.jif.utils.log.ExampleLoggingApplication</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>test finer</message>
+</record>
+<record>
+  <date>2007-12-13T20:15:06</date>
+  <millis>1197594906640</millis>
+  <sequence>1</sequence>
+  <logger>edu.mbl.jif.utils.log.ExampleLoggingApplication</logger>
+  <level>INFO</level>
+  <class>edu.mbl.jif.utils.log.ExampleLoggingApplication</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>test info</message>
+</record>
+<record>
+  <date>2007-12-13T20:15:06</date>
+  <millis>1197594906640</millis>
+  <sequence>2</sequence>
+  <logger>edu.mbl.jif.utils.log.ExampleLoggingApplication</logger>
+  <level>SEVERE</level>
+  <class>edu.mbl.jif.utils.log.ExampleLoggingApplication</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>test severe</message>
+</record>
+<record>
+  <date>2007-12-13T20:15:06</date>
+  <millis>1197594906640</millis>
+  <sequence>3</sequence>
+  <logger>edu.mbl.jif.utils.log.ExampleLoggingApplication</logger>
+  <level>FINER</level>
+  <class>edu.mbl.jif.utils.log.ExampleLoggingApplication</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>About to create new ExampleLoggingApplication()</message>
+</record>
+<record>
+  <date>2007-12-13T20:15:06</date>
+  <millis>1197594906640</millis>
+  <sequence>4</sequence>
+  <logger>edu.mbl.jif.utils.log.ExampleLoggingApplication</logger>
+  <level>FINER</level>
+  <class>edu.mbl.jif.utils.log.ExampleLoggingApplication</class>
+  <method>&lt;init&gt;</method>
+  <thread>10</thread>
+  <message>ENTRY</message>
+</record>
+<record>
+  <date>2007-12-13T20:15:06</date>
+  <millis>1197594906640</millis>
+  <sequence>5</sequence>
+  <logger>edu.mbl.jif.utils.log.ExampleLoggingApplication</logger>
+  <level>FINER</level>
+  <class>edu.mbl.jif.utils.log.ExampleLoggingApplication</class>
+  <method>&lt;init&gt;</method>
+  <thread>10</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2007-12-13T20:15:06</date>
+  <millis>1197594906640</millis>
+  <sequence>6</sequence>
+  <logger>edu.mbl.jif.utils.log.ExampleLoggingApplication</logger>
+  <level>FINER</level>
+  <class>edu.mbl.jif.utils.log.ExampleLoggingApplication</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>java.lang.RuntimeException: throw a RuntimeException
+	at edu.mbl.jif.utils.log.ExampleLoggingApplication.main(ExampleLoggingApplication.java:83)
+</message>
+</record>
+<record>
+  <date>2007-12-13T20:15:06</date>
+  <millis>1197594906656</millis>
+  <sequence>7</sequence>
+  <logger>edu.mbl.jif.utils.log.ExampleLoggingApplication</logger>
+  <level>FINER</level>
+  <class>edu.mbl.jif.utils.log.ExampleLoggingApplication</class>
+  <method>method1</method>
+  <thread>10</thread>
+  <message>ENTRY {0} {1} {2} {3} {4} {5}
+ String: test Object1: java.lang.RuntimeException: BadObject toString throw RuntimeException
+	at edu.mbl.jif.utils.log.ExampleLoggingApplication$BadObject.toString(ExampleLoggingApplication.java:138)
+	at edu.mbl.jif.utils.log.RobustFormatter.toString(RobustFormatter.java:101)
+	at edu.mbl.jif.utils.log.RobustFormatter.formatMessage(RobustFormatter.java:180)
+	at edu.mbl.jif.utils.log.LoggingXMLFormatter.format(LoggingXMLFormatter.java:138)
+	at java.util.logging.StreamHandler.publish(StreamHandler.java:179)
+	at java.util.logging.FileHandler.publish(FileHandler.java:555)
+	at java.util.logging.Logger.log(Logger.java:472)
+	at java.util.logging.Logger.doLog(Logger.java:494)
+	at java.util.logging.Logger.logp(Logger.java:663)
+	at java.util.logging.Logger.entering(Logger.java:914)
+	at edu.mbl.jif.utils.log.ExampleLoggingApplication.method1(ExampleLoggingApplication.java:115)
+	at edu.mbl.jif.utils.log.ExampleLoggingApplication.main(ExampleLoggingApplication.java:86)
+ Object2: testfile</message>
+</record>
+<record>
+  <date>2007-12-13T20:15:06</date>
+  <millis>1197594906656</millis>
+  <sequence>8</sequence>
+  <logger>edu.mbl.jif.utils.log.ExampleLoggingApplication</logger>
+  <level>FINER</level>
+  <class>edu.mbl.jif.utils.log.ExampleLoggingApplication</class>
+  <method>method1</method>
+  <thread>10</thread>
+  <message>RETURN</message>
+</record>
+<record>
+  <date>2007-12-13T20:15:06</date>
+  <millis>1197594906656</millis>
+  <sequence>9</sequence>
+  <logger>edu.mbl.jif.utils.log.ExampleLoggingApplication</logger>
+  <level>SEVERE</level>
+  <class>edu.mbl.jif.utils.log.ExampleLoggingApplication</class>
+  <method>main</method>
+  <thread>10</thread>
+  <message>Log a badObject {0} {1}
+ string java.lang.RuntimeException: BadObject toString throw RuntimeException
+	at edu.mbl.jif.utils.log.ExampleLoggingApplication$BadObject.toString(ExampleLoggingApplication.java:138)
+	at edu.mbl.jif.utils.log.RobustFormatter.toString(RobustFormatter.java:101)
+	at edu.mbl.jif.utils.log.RobustFormatter.formatMessage(RobustFormatter.java:180)
+	at edu.mbl.jif.utils.log.LoggingXMLFormatter.format(LoggingXMLFormatter.java:138)
+	at java.util.logging.StreamHandler.publish(StreamHandler.java:179)
+	at java.util.logging.FileHandler.publish(FileHandler.java:555)
+	at java.util.logging.Logger.log(Logger.java:472)
+	at java.util.logging.Logger.doLog(Logger.java:494)
+	at java.util.logging.Logger.log(Logger.java:558)
+	at edu.mbl.jif.utils.log.ExampleLoggingApplication.main(ExampleLoggingApplication.java:89)
+</message>
+</record>
+</log>

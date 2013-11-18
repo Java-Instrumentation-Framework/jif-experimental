@@ -1,0 +1,10 @@
+[PropertyInfo]
+fax,edu.mbl.jif.io.xPhoneNumber,false,false, , ,false,<default>
+firstname,String,false,false, , ,false,<default>
+lastname,String,false,false, , ,false,<default>
+phone,edu.mbl.jif.io.xPhoneNumber,false,false, , ,false,<default>
+[IconNames]
+
+
+
+

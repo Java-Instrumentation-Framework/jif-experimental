@@ -1,0 +1,501 @@
+LOG(2013-01-31T09:50:43.394799, 6464, 0000000000368C90:): -------->>
+LOG(2013-01-31T09:50:43.396799, 6464, 0000000000368C90:): Core session started on 2013-01-31T09:50:43.396799 by GBH on GBH-VAIO
+LOG(2013-01-31T09:50:43.396799, 6464, 0000000000368C90:): Debug logging disabled
+LOG(2013-01-31T09:50:43.396799, 6464, 0000000000368C90:): Debug logging enabled
+LOG(2013-01-31T09:50:43.396799, 6464, 0000000000368C90:): > MM Studio version: 1.4.11  20121102
+LOG(2013-01-31T09:50:43.396799, 6464, 0000000000368C90:): > MMCore version 2.3.2
+LOG(2013-01-31T09:50:43.396799, 6464, 0000000000368C90:): > Device API version 53, Module API version 7
+LOG(2013-01-31T09:50:43.396799, 6464, 0000000000368C90:): > Operating System: Windows 7 6.1
+LOG(2013-01-31T09:50:43.396799, 6464, 0000000000368C90:): > JVM: Java HotSpot(TM) 64-Bit Server VM, version 1.6.0_33; 64 bit
+DBG(2013-01-31T09:50:43.397799, 6464, t:0000000000368C90:) Circular buffer set to 25 MB.
+LOG(2013-01-31T09:50:45.716932, 6464, 0000000000368C90:): All devices unloaded.
+LOG(2013-01-31T09:50:45.716932, 6464, 0000000000368C90:): > Notification for Device: Core Property: Initialize changed to value: 0
+DBG(2013-01-31T09:50:45.716932, 6464, t:0000000000368C90:) Property set: device=Core, name=Initialize, value=0
+LOG(2013-01-31T09:50:45.718932, 6464, 0000000000368C90:): Device DHub loaded from DemoCamera and labeled as DHub
+LOG(2013-01-31T09:50:45.719932, 6464, 0000000000368C90:): Device DCam loaded from DemoCamera and labeled as Camera
+LOG(2013-01-31T09:50:45.719932, 6464, 0000000000368C90:): Device Camera set as default camera.
+LOG(2013-01-31T09:50:45.719932, 6464, 0000000000368C90:): Device DWheel loaded from DemoCamera and labeled as Dichroic
+LOG(2013-01-31T09:50:45.719932, 6464, 0000000000368C90:): Device DWheel loaded from DemoCamera and labeled as Emission
+LOG(2013-01-31T09:50:45.720932, 6464, 0000000000368C90:): Device DWheel loaded from DemoCamera and labeled as Excitation
+LOG(2013-01-31T09:50:45.720932, 6464, 0000000000368C90:): Device DObjective loaded from DemoCamera and labeled as Objective
+LOG(2013-01-31T09:50:45.720932, 6464, 0000000000368C90:): Device DStage loaded from DemoCamera and labeled as Z
+LOG(2013-01-31T09:50:45.720932, 6464, 0000000000368C90:): Device DLightPath loaded from DemoCamera and labeled as Path
+LOG(2013-01-31T09:50:45.721932, 6464, 0000000000368C90:): Device DXYStage loaded from DemoCamera and labeled as XY
+LOG(2013-01-31T09:50:45.721932, 6464, 0000000000368C90:): Device XY set as default xyStage.
+LOG(2013-01-31T09:50:45.721932, 6464, 0000000000368C90:): Device DShutter loaded from DemoCamera and labeled as Shutter
+LOG(2013-01-31T09:50:45.721932, 6464, 0000000000368C90:): Device Shutter set as default shutter.
+LOG(2013-01-31T09:50:45.721932, 6464, 0000000000368C90:): Device DAutoFocus loaded from DemoCamera and labeled as Autofocus
+LOG(2013-01-31T09:50:45.721932, 6464, 0000000000368C90:): Device Autofocus set as default auto-focus.
+LOG(2013-01-31T09:50:45.721932, 6464, 0000000000368C90:): Starting initialization sequence for 11 devices...
+LOG(2013-01-31T09:50:45.722932, 6464, 0000000000368C90:): Device DHub initialized.
+DBG(2013-01-31T09:50:45.722932, 6464, t:0000000000368C90:) Device Camera debug message: Setting Allowed Binning settings
+DBG(2013-01-31T09:50:45.722932, 6464, t:0000000000368C90:) Device Camera debug message: Reading property ScanMode
+LOG(2013-01-31T09:50:45.722932, 6464, 0000000000368C90:): Device Camera initialized.
+LOG(2013-01-31T09:50:45.722932, 6464, 0000000000368C90:): Device Dichroic initialized.
+LOG(2013-01-31T09:50:45.723933, 6464, 0000000000368C90:): Device Emission initialized.
+LOG(2013-01-31T09:50:45.723933, 6464, 0000000000368C90:): Device Excitation initialized.
+LOG(2013-01-31T09:50:45.723933, 6464, 0000000000368C90:): Device Objective initialized.
+LOG(2013-01-31T09:50:45.723933, 6464, 0000000000368C90:): Device Z initialized.
+LOG(2013-01-31T09:50:45.723933, 6464, 0000000000368C90:): Device Path initialized.
+LOG(2013-01-31T09:50:45.723933, 6464, 0000000000368C90:): Device XY initialized.
+LOG(2013-01-31T09:50:45.723933, 6464, 0000000000368C90:): Device Shutter initialized.
+LOG(2013-01-31T09:50:45.723933, 6464, 0000000000368C90:): Device Autofocus initialized.
+LOG(2013-01-31T09:50:45.723933, 6464, 0000000000368C90:): > Notification for Device: Core Property: Initialize changed to value: 1
+DBG(2013-01-31T09:50:45.723933, 6464, t:0000000000368C90:) Property set: device=Core, name=Initialize, value=1
+LOG(2013-01-31T09:50:45.723933, 6464, 0000000000368C90:): Camera device set to Camera
+LOG(2013-01-31T09:50:45.724933, 6464, 0000000000368C90:): > Notification for Device: Core Property: Camera changed to value: Camera
+DBG(2013-01-31T09:50:45.724933, 6464, t:0000000000368C90:) Property set: device=Core, name=Camera, value=Camera
+LOG(2013-01-31T09:50:45.724933, 6464, 0000000000368C90:): > Notification for Device: Core Property: Shutter changed to value: Shutter
+DBG(2013-01-31T09:50:45.724933, 6464, t:0000000000368C90:) Property set: device=Core, name=Shutter, value=Shutter
+LOG(2013-01-31T09:50:45.724933, 6464, 0000000000368C90:): Focus device set to Z
+LOG(2013-01-31T09:50:45.724933, 6464, 0000000000368C90:): > Notification for Device: Core Property: Focus changed to value: Z
+DBG(2013-01-31T09:50:45.724933, 6464, t:0000000000368C90:) Property set: device=Core, name=Focus, value=Z
+LOG(2013-01-31T09:50:45.724933, 6464, 0000000000368C90:): Auto shutter ON.
+LOG(2013-01-31T09:50:45.724933, 6464, 0000000000368C90:): > Notification for Device: Core Property: AutoShutter changed to value: 1
+DBG(2013-01-31T09:50:45.724933, 6464, t:0000000000368C90:) Property set: device=Core, name=AutoShutter, value=1
+DBG(2013-01-31T09:50:45.724933, 6464, t:0000000000368C90:) State 9 for device Dichroic defined as label State-9
+DBG(2013-01-31T09:50:45.724933, 6464, t:0000000000368C90:) State 8 for device Dichroic defined as label State-8
+DBG(2013-01-31T09:50:45.724933, 6464, t:0000000000368C90:) State 7 for device Dichroic defined as label State-7
+DBG(2013-01-31T09:50:45.724933, 6464, t:0000000000368C90:) State 6 for device Dichroic defined as label State-6
+DBG(2013-01-31T09:50:45.724933, 6464, t:0000000000368C90:) State 5 for device Dichroic defined as label State-5
+DBG(2013-01-31T09:50:45.724933, 6464, t:0000000000368C90:) State 4 for device Dichroic defined as label State-4
+DBG(2013-01-31T09:50:45.724933, 6464, t:0000000000368C90:) State 3 for device Dichroic defined as label State-3
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 2 for device Dichroic defined as label Q585LP
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 1 for device Dichroic defined as label Q505LP
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 0 for device Dichroic defined as label 400DCLP
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 9 for device Emission defined as label State-9
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 8 for device Emission defined as label State-8
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 7 for device Emission defined as label State-7
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 6 for device Emission defined as label State-6
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 5 for device Emission defined as label State-5
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 4 for device Emission defined as label State-4
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 3 for device Emission defined as label Chroma-HQ700
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 2 for device Emission defined as label Chroma-HQ535
+DBG(2013-01-31T09:50:45.725933, 6464, t:0000000000368C90:) State 1 for device Emission defined as label Chroma-D460
+DBG(2013-01-31T09:50:45.726933, 6464, t:0000000000368C90:) State 0 for device Emission defined as label Chroma-HQ620
+DBG(2013-01-31T09:50:45.726933, 6464, t:0000000000368C90:) State 9 for device Excitation defined as label State-9
+DBG(2013-01-31T09:50:45.726933, 6464, t:0000000000368C90:) State 8 for device Excitation defined as label State-8
+DBG(2013-01-31T09:50:45.726933, 6464, t:0000000000368C90:) State 7 for device Excitation defined as label State-7
+DBG(2013-01-31T09:50:45.726933, 6464, t:0000000000368C90:) State 6 for device Excitation defined as label State-6
+DBG(2013-01-31T09:50:45.726933, 6464, t:0000000000368C90:) State 5 for device Excitation defined as label State-5
+DBG(2013-01-31T09:50:45.726933, 6464, t:0000000000368C90:) State 4 for device Excitation defined as label State-4
+DBG(2013-01-31T09:50:45.726933, 6464, t:0000000000368C90:) State 3 for device Excitation defined as label Chroma-HQ620
+DBG(2013-01-31T09:50:45.726933, 6464, t:0000000000368C90:) State 2 for device Excitation defined as label Chroma-HQ570
+DBG(2013-01-31T09:50:45.727933, 6464, t:0000000000368C90:) State 1 for device Excitation defined as label Chroma-HQ480
+DBG(2013-01-31T09:50:45.727933, 6464, t:0000000000368C90:) State 0 for device Excitation defined as label Chroma-D360
+DBG(2013-01-31T09:50:45.727933, 6464, t:0000000000368C90:) State 5 for device Objective defined as label Objective-5
+DBG(2013-01-31T09:50:45.727933, 6464, t:0000000000368C90:) State 4 for device Objective defined as label Objective-4
+DBG(2013-01-31T09:50:45.727933, 6464, t:0000000000368C90:) State 3 for device Objective defined as label Nikon 20X Plan Fluor ELWD
+DBG(2013-01-31T09:50:45.727933, 6464, t:0000000000368C90:) State 2 for device Objective defined as label Objective-2
+DBG(2013-01-31T09:50:45.727933, 6464, t:0000000000368C90:) State 1 for device Objective defined as label Nikon 10X S Fluor
+DBG(2013-01-31T09:50:45.727933, 6464, t:0000000000368C90:) State 0 for device Objective defined as label Nikon 40X Plan Flueor ELWD
+DBG(2013-01-31T09:50:45.727933, 6464, t:0000000000368C90:) State 2 for device Path defined as label State-2
+DBG(2013-01-31T09:50:45.727933, 6464, t:0000000000368C90:) State 1 for device Path defined as label State-1
+DBG(2013-01-31T09:50:45.727933, 6464, t:0000000000368C90:) State 0 for device Path defined as label State-0
+LOG(2013-01-31T09:50:45.727933, 6464, 0000000000368C90:): Configuration Camera/MedRes: new setting for device Camera defined as Binning=2
+LOG(2013-01-31T09:50:45.727933, 6464, 0000000000368C90:): Configuration Camera/MedRes: new setting for device Camera defined as BitDepth=10
+LOG(2013-01-31T09:50:45.727933, 6464, 0000000000368C90:): Configuration Camera/HighRes: new setting for device Camera defined as Binning=1
+LOG(2013-01-31T09:50:45.727933, 6464, 0000000000368C90:): Configuration Camera/HighRes: new setting for device Camera defined as BitDepth=12
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Camera/LowRes: new setting for device Camera defined as Binning=4
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Camera/LowRes: new setting for device Camera defined as BitDepth=8
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Objective/20X: new setting for device Objective defined as State=3
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Objective/40X: new setting for device Objective defined as State=0
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Objective/10X: new setting for device Objective defined as State=1
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/FITC: new setting for device Dichroic defined as Label=Q505LP
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/FITC: new setting for device Emission defined as Label=Chroma-HQ535
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/FITC: new setting for device Excitation defined as Label=Chroma-HQ480
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/Rhodamine: new setting for device Dichroic defined as Label=Q585LP
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/Rhodamine: new setting for device Emission defined as Label=Chroma-HQ700
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/Rhodamine: new setting for device Excitation defined as Label=Chroma-HQ570
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/DAPI: new setting for device Dichroic defined as Label=400DCLP
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/DAPI: new setting for device Emission defined as Label=Chroma-HQ620
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/DAPI: new setting for device Excitation defined as Label=Chroma-D360
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/Cy5: new setting for device Dichroic defined as Label=400DCLP
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/Cy5: new setting for device Emission defined as Label=Chroma-HQ700
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration Channel/Cy5: new setting for device Excitation defined as Label=Chroma-HQ570
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration System/Startup: new setting for device Camera defined as BitDepth=16
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration System/Startup: new setting for device Camera defined as ScanMode=1
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration System/Startup: new setting for device Objective defined as Label=Nikon 10X S Fluor
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration System/Startup: new setting for device Camera defined as Binning=1
+LOG(2013-01-31T09:50:45.728933, 6464, 0000000000368C90:): Configuration LightPath/Camera-left: new setting for device Path defined as State=1
+LOG(2013-01-31T09:50:45.729933, 6464, 0000000000368C90:): Configuration LightPath/Eyepiece: new setting for device Path defined as State=0
+LOG(2013-01-31T09:50:45.729933, 6464, 0000000000368C90:): Configuration LightPath/Camera-right: new setting for device Path defined as State=2
+LOG(2013-01-31T09:50:45.729933, 6464, 0000000000368C90:): Resolution ID Res20x: for device Objective defined as Label=Nikon 20X Plan Fluor ELWD
+LOG(2013-01-31T09:50:45.729933, 6464, 0000000000368C90:): Pixel size 0.500000 um set for resolution ID: Res20x
+LOG(2013-01-31T09:50:45.729933, 6464, 0000000000368C90:): Resolution ID Res40x: for device Objective defined as Label=Nikon 40X Plan Flueor ELWD
+LOG(2013-01-31T09:50:45.729933, 6464, 0000000000368C90:): Pixel size 0.250000 um set for resolution ID: Res40x
+LOG(2013-01-31T09:50:45.729933, 6464, 0000000000368C90:): Resolution ID Res10x: for device Objective defined as Label=Nikon 10X S Fluor
+LOG(2013-01-31T09:50:45.729933, 6464, 0000000000368C90:): Pixel size 1.000000 um set for resolution ID: Res10x
+DBG(2013-01-31T09:50:45.730933, 6464, t:0000000000368C90:) Device Camera debug message: Setting Allowed Binning settings
+LOG(2013-01-31T09:50:45.730933, 6464, 0000000000368C90:): > Notification from MMCore ignored since the system is still loading
+LOG(2013-01-31T09:50:45.730933, 6464, 0000000000368C90:): > Notification for Device: Objective Property: State changed to value: 1
+LOG(2013-01-31T09:50:45.730933, 6464, 0000000000368C90:): > Notification for Device: Objective Property: Label changed to value: Nikon 10X S Fluor
+LOG(2013-01-31T09:50:45.732933, 6464, 0000000000368C90:): > Notification for Device: Camera Property: Binning changed to value: 1
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Configuration System/Startup applied.
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Waiting for device DHub...
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Finished waiting.
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Waiting for device Camera...
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Finished waiting.
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Waiting for device Dichroic...
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Finished waiting.
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Waiting for device Emission...
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Finished waiting.
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Waiting for device Excitation...
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Finished waiting.
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Waiting for device Objective...
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Finished waiting.
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Waiting for device Z...
+DBG(2013-01-31T09:50:45.732933, 6464, t:0000000000368C90:) Finished waiting.
+DBG(2013-01-31T09:50:45.733933, 6464, t:0000000000368C90:) Waiting for device Path...
+DBG(2013-01-31T09:50:45.733933, 6464, t:0000000000368C90:) Finished waiting.
+DBG(2013-01-31T09:50:45.733933, 6464, t:0000000000368C90:) Waiting for device XY...
+DBG(2013-01-31T09:50:45.733933, 6464, t:0000000000368C90:) Finished waiting.
+DBG(2013-01-31T09:50:45.733933, 6464, t:0000000000368C90:) Waiting for device Shutter...
+DBG(2013-01-31T09:50:45.733933, 6464, t:0000000000368C90:) Finished waiting.
+DBG(2013-01-31T09:50:45.733933, 6464, t:0000000000368C90:) Waiting for device Autofocus...
+DBG(2013-01-31T09:50:45.733933, 6464, t:0000000000368C90:) Finished waiting.
+DBG(2013-01-31T09:50:45.733933, 6464, t:0000000000368C90:) Device Camera debug message: Reading property ScanMode
+LOG(2013-01-31T09:50:45.734933, 6464, 0000000000368C90:): System state cache updated.
+LOG(2013-01-31T09:50:45.750934, 6464, 0000000000368C90:): Auto-focus device set to Autofocus
+DBG(2013-01-31T09:50:45.752934, 6464, t:0000000000368C90:) Device Z debug message: Reporting position
+DBG(2013-01-31T09:50:45.754934, 6464, t:0000000000368C90:) Device Camera debug message: Reading property ScanMode
+LOG(2013-01-31T09:50:45.755934, 6464, 0000000000368C90:): System state cache updated.
+DBG(2013-01-31T09:50:45.755934, 6464, t:0000000000368C90:) Device Z debug message: Reporting position
+LOG(2013-01-31T09:50:45.759935, 6464, 0000000000368C90:): > Startup script file (C:\GitHub\jif\MMgrMaven/MMStartup.bsh) not present.
+LOG(2013-01-31T09:50:45.985948, 6464, 0000000000368C90:): Auto-focus device set to Autofocus
+LOG(2013-01-31T09:50:46.078953, 6464, 0000000000368C90:): Auto-focus device set to Autofocus
+DBG(2013-01-31T09:50:46.157957, 6464, t:0000000000368C90:) Device Camera debug message: Reading property ScanMode
+LOG(2013-01-31T09:50:57.386600, 6464, 0000000000368C90:): Auto-focus device set to Autofocus
+LOG(2013-01-31T10:08:40.129385, 2040, 000000000023C240:): -------->>
+LOG(2013-01-31T10:08:40.130385, 2040, 000000000023C240:): Core session started on 2013-01-31T10:08:40.130385 by GBH on GBH-VAIO
+LOG(2013-01-31T10:08:40.130385, 2040, 000000000023C240:): Debug logging disabled
+LOG(2013-01-31T10:08:40.130385, 2040, 000000000023C240:): Debug logging enabled
+LOG(2013-01-31T10:08:40.130385, 2040, 000000000023C240:): > MM Studio version: 1.4.11  20121102
+LOG(2013-01-31T10:08:40.130385, 2040, 000000000023C240:): > MMCore version 2.3.2
+LOG(2013-01-31T10:08:40.130385, 2040, 000000000023C240:): > Device API version 53, Module API version 7
+LOG(2013-01-31T10:08:40.130385, 2040, 000000000023C240:): > Operating System: Windows 7 6.1
+LOG(2013-01-31T10:08:40.130385, 2040, 000000000023C240:): > JVM: Java HotSpot(TM) 64-Bit Server VM, version 1.6.0_33; 64 bit
+DBG(2013-01-31T10:08:40.131385, 2040, t:000000000023C240:) Circular buffer set to 25 MB.
+LOG(2013-01-31T10:08:43.814596, 2040, 000000000023C240:): All devices unloaded.
+LOG(2013-01-31T10:08:43.814596, 2040, 000000000023C240:): > Notification for Device: Core Property: Initialize changed to value: 0
+DBG(2013-01-31T10:08:43.814596, 2040, t:000000000023C240:) Property set: device=Core, name=Initialize, value=0
+LOG(2013-01-31T10:08:43.816596, 2040, 000000000023C240:): Device DHub loaded from DemoCamera and labeled as DHub
+LOG(2013-01-31T10:08:43.816596, 2040, 000000000023C240:): Device DCam loaded from DemoCamera and labeled as Camera
+LOG(2013-01-31T10:08:43.816596, 2040, 000000000023C240:): Device Camera set as default camera.
+LOG(2013-01-31T10:08:43.817596, 2040, 000000000023C240:): Device DWheel loaded from DemoCamera and labeled as Dichroic
+LOG(2013-01-31T10:08:43.817596, 2040, 000000000023C240:): Device DWheel loaded from DemoCamera and labeled as Emission
+LOG(2013-01-31T10:08:43.817596, 2040, 000000000023C240:): Device DWheel loaded from DemoCamera and labeled as Excitation
+LOG(2013-01-31T10:08:43.817596, 2040, 000000000023C240:): Device DObjective loaded from DemoCamera and labeled as Objective
+LOG(2013-01-31T10:08:43.818596, 2040, 000000000023C240:): Device DStage loaded from DemoCamera and labeled as Z
+LOG(2013-01-31T10:08:43.818596, 2040, 000000000023C240:): Device DLightPath loaded from DemoCamera and labeled as Path
+LOG(2013-01-31T10:08:43.818596, 2040, 000000000023C240:): Device DXYStage loaded from DemoCamera and labeled as XY
+LOG(2013-01-31T10:08:43.818596, 2040, 000000000023C240:): Device XY set as default xyStage.
+LOG(2013-01-31T10:08:43.818596, 2040, 000000000023C240:): Device DShutter loaded from DemoCamera and labeled as Shutter
+LOG(2013-01-31T10:08:43.818596, 2040, 000000000023C240:): Device Shutter set as default shutter.
+LOG(2013-01-31T10:08:43.819596, 2040, 000000000023C240:): Device DAutoFocus loaded from DemoCamera and labeled as Autofocus
+LOG(2013-01-31T10:08:43.819596, 2040, 000000000023C240:): Device Autofocus set as default auto-focus.
+LOG(2013-01-31T10:08:43.819596, 2040, 000000000023C240:): Starting initialization sequence for 11 devices...
+LOG(2013-01-31T10:08:43.819596, 2040, 000000000023C240:): Device DHub initialized.
+DBG(2013-01-31T10:08:43.819596, 2040, t:000000000023C240:) Device Camera debug message: Setting Allowed Binning settings
+DBG(2013-01-31T10:08:43.819596, 2040, t:000000000023C240:) Device Camera debug message: Reading property ScanMode
+LOG(2013-01-31T10:08:43.819596, 2040, 000000000023C240:): Device Camera initialized.
+LOG(2013-01-31T10:08:43.820596, 2040, 000000000023C240:): Device Dichroic initialized.
+LOG(2013-01-31T10:08:43.820596, 2040, 000000000023C240:): Device Emission initialized.
+LOG(2013-01-31T10:08:43.820596, 2040, 000000000023C240:): Device Excitation initialized.
+LOG(2013-01-31T10:08:43.820596, 2040, 000000000023C240:): Device Objective initialized.
+LOG(2013-01-31T10:08:43.820596, 2040, 000000000023C240:): Device Z initialized.
+LOG(2013-01-31T10:08:43.820596, 2040, 000000000023C240:): Device Path initialized.
+LOG(2013-01-31T10:08:43.820596, 2040, 000000000023C240:): Device XY initialized.
+LOG(2013-01-31T10:08:43.821596, 2040, 000000000023C240:): Device Shutter initialized.
+LOG(2013-01-31T10:08:43.821596, 2040, 000000000023C240:): Device Autofocus initialized.
+LOG(2013-01-31T10:08:43.821596, 2040, 000000000023C240:): > Notification for Device: Core Property: Initialize changed to value: 1
+DBG(2013-01-31T10:08:43.821596, 2040, t:000000000023C240:) Property set: device=Core, name=Initialize, value=1
+LOG(2013-01-31T10:08:43.821596, 2040, 000000000023C240:): Camera device set to Camera
+LOG(2013-01-31T10:08:43.821596, 2040, 000000000023C240:): > Notification for Device: Core Property: Camera changed to value: Camera
+DBG(2013-01-31T10:08:43.821596, 2040, t:000000000023C240:) Property set: device=Core, name=Camera, value=Camera
+LOG(2013-01-31T10:08:43.821596, 2040, 000000000023C240:): > Notification for Device: Core Property: Shutter changed to value: Shutter
+DBG(2013-01-31T10:08:43.821596, 2040, t:000000000023C240:) Property set: device=Core, name=Shutter, value=Shutter
+LOG(2013-01-31T10:08:43.821596, 2040, 000000000023C240:): Focus device set to Z
+LOG(2013-01-31T10:08:43.821596, 2040, 000000000023C240:): > Notification for Device: Core Property: Focus changed to value: Z
+DBG(2013-01-31T10:08:43.822596, 2040, t:000000000023C240:) Property set: device=Core, name=Focus, value=Z
+LOG(2013-01-31T10:08:43.822596, 2040, 000000000023C240:): Auto shutter ON.
+LOG(2013-01-31T10:08:43.822596, 2040, 000000000023C240:): > Notification for Device: Core Property: AutoShutter changed to value: 1
+DBG(2013-01-31T10:08:43.822596, 2040, t:000000000023C240:) Property set: device=Core, name=AutoShutter, value=1
+DBG(2013-01-31T10:08:43.822596, 2040, t:000000000023C240:) State 9 for device Dichroic defined as label State-9
+DBG(2013-01-31T10:08:43.822596, 2040, t:000000000023C240:) State 8 for device Dichroic defined as label State-8
+DBG(2013-01-31T10:08:43.822596, 2040, t:000000000023C240:) State 7 for device Dichroic defined as label State-7
+DBG(2013-01-31T10:08:43.822596, 2040, t:000000000023C240:) State 6 for device Dichroic defined as label State-6
+DBG(2013-01-31T10:08:43.822596, 2040, t:000000000023C240:) State 5 for device Dichroic defined as label State-5
+DBG(2013-01-31T10:08:43.822596, 2040, t:000000000023C240:) State 4 for device Dichroic defined as label State-4
+DBG(2013-01-31T10:08:43.822596, 2040, t:000000000023C240:) State 3 for device Dichroic defined as label State-3
+DBG(2013-01-31T10:08:43.822596, 2040, t:000000000023C240:) State 2 for device Dichroic defined as label Q585LP
+DBG(2013-01-31T10:08:43.823596, 2040, t:000000000023C240:) State 1 for device Dichroic defined as label Q505LP
+DBG(2013-01-31T10:08:43.823596, 2040, t:000000000023C240:) State 0 for device Dichroic defined as label 400DCLP
+DBG(2013-01-31T10:08:43.823596, 2040, t:000000000023C240:) State 9 for device Emission defined as label State-9
+DBG(2013-01-31T10:08:43.823596, 2040, t:000000000023C240:) State 8 for device Emission defined as label State-8
+DBG(2013-01-31T10:08:43.823596, 2040, t:000000000023C240:) State 7 for device Emission defined as label State-7
+DBG(2013-01-31T10:08:43.823596, 2040, t:000000000023C240:) State 6 for device Emission defined as label State-6
+DBG(2013-01-31T10:08:43.823596, 2040, t:000000000023C240:) State 5 for device Emission defined as label State-5
+DBG(2013-01-31T10:08:43.823596, 2040, t:000000000023C240:) State 4 for device Emission defined as label State-4
+DBG(2013-01-31T10:08:43.823596, 2040, t:000000000023C240:) State 3 for device Emission defined as label Chroma-HQ700
+DBG(2013-01-31T10:08:43.824596, 2040, t:000000000023C240:) State 2 for device Emission defined as label Chroma-HQ535
+DBG(2013-01-31T10:08:43.824596, 2040, t:000000000023C240:) State 1 for device Emission defined as label Chroma-D460
+DBG(2013-01-31T10:08:43.824596, 2040, t:000000000023C240:) State 0 for device Emission defined as label Chroma-HQ620
+DBG(2013-01-31T10:08:43.824596, 2040, t:000000000023C240:) State 9 for device Excitation defined as label State-9
+DBG(2013-01-31T10:08:43.824596, 2040, t:000000000023C240:) State 8 for device Excitation defined as label State-8
+DBG(2013-01-31T10:08:43.824596, 2040, t:000000000023C240:) State 7 for device Excitation defined as label State-7
+DBG(2013-01-31T10:08:43.824596, 2040, t:000000000023C240:) State 6 for device Excitation defined as label State-6
+DBG(2013-01-31T10:08:43.824596, 2040, t:000000000023C240:) State 5 for device Excitation defined as label State-5
+DBG(2013-01-31T10:08:43.824596, 2040, t:000000000023C240:) State 4 for device Excitation defined as label State-4
+DBG(2013-01-31T10:08:43.824596, 2040, t:000000000023C240:) State 3 for device Excitation defined as label Chroma-HQ620
+DBG(2013-01-31T10:08:43.825596, 2040, t:000000000023C240:) State 2 for device Excitation defined as label Chroma-HQ570
+DBG(2013-01-31T10:08:43.825596, 2040, t:000000000023C240:) State 1 for device Excitation defined as label Chroma-HQ480
+DBG(2013-01-31T10:08:43.825596, 2040, t:000000000023C240:) State 0 for device Excitation defined as label Chroma-D360
+DBG(2013-01-31T10:08:43.825596, 2040, t:000000000023C240:) State 5 for device Objective defined as label Objective-5
+DBG(2013-01-31T10:08:43.825596, 2040, t:000000000023C240:) State 4 for device Objective defined as label Objective-4
+DBG(2013-01-31T10:08:43.825596, 2040, t:000000000023C240:) State 3 for device Objective defined as label Nikon 20X Plan Fluor ELWD
+DBG(2013-01-31T10:08:43.825596, 2040, t:000000000023C240:) State 2 for device Objective defined as label Objective-2
+DBG(2013-01-31T10:08:43.825596, 2040, t:000000000023C240:) State 1 for device Objective defined as label Nikon 10X S Fluor
+DBG(2013-01-31T10:08:43.825596, 2040, t:000000000023C240:) State 0 for device Objective defined as label Nikon 40X Plan Flueor ELWD
+DBG(2013-01-31T10:08:43.825596, 2040, t:000000000023C240:) State 2 for device Path defined as label State-2
+DBG(2013-01-31T10:08:43.825596, 2040, t:000000000023C240:) State 1 for device Path defined as label State-1
+DBG(2013-01-31T10:08:43.826596, 2040, t:000000000023C240:) State 0 for device Path defined as label State-0
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Camera/MedRes: new setting for device Camera defined as Binning=2
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Camera/MedRes: new setting for device Camera defined as BitDepth=10
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Camera/HighRes: new setting for device Camera defined as Binning=1
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Camera/HighRes: new setting for device Camera defined as BitDepth=12
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Camera/LowRes: new setting for device Camera defined as Binning=4
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Camera/LowRes: new setting for device Camera defined as BitDepth=8
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Objective/20X: new setting for device Objective defined as State=3
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Objective/40X: new setting for device Objective defined as State=0
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Objective/10X: new setting for device Objective defined as State=1
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Channel/FITC: new setting for device Dichroic defined as Label=Q505LP
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Channel/FITC: new setting for device Emission defined as Label=Chroma-HQ535
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Channel/FITC: new setting for device Excitation defined as Label=Chroma-HQ480
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Channel/Rhodamine: new setting for device Dichroic defined as Label=Q585LP
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Channel/Rhodamine: new setting for device Emission defined as Label=Chroma-HQ700
+LOG(2013-01-31T10:08:43.826596, 2040, 000000000023C240:): Configuration Channel/Rhodamine: new setting for device Excitation defined as Label=Chroma-HQ570
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration Channel/DAPI: new setting for device Dichroic defined as Label=400DCLP
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration Channel/DAPI: new setting for device Emission defined as Label=Chroma-HQ620
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration Channel/DAPI: new setting for device Excitation defined as Label=Chroma-D360
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration Channel/Cy5: new setting for device Dichroic defined as Label=400DCLP
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration Channel/Cy5: new setting for device Emission defined as Label=Chroma-HQ700
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration Channel/Cy5: new setting for device Excitation defined as Label=Chroma-HQ570
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration System/Startup: new setting for device Camera defined as BitDepth=16
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration System/Startup: new setting for device Camera defined as ScanMode=1
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration System/Startup: new setting for device Objective defined as Label=Nikon 10X S Fluor
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration System/Startup: new setting for device Camera defined as Binning=1
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration LightPath/Camera-left: new setting for device Path defined as State=1
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration LightPath/Eyepiece: new setting for device Path defined as State=0
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Configuration LightPath/Camera-right: new setting for device Path defined as State=2
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Resolution ID Res20x: for device Objective defined as Label=Nikon 20X Plan Fluor ELWD
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Pixel size 0.500000 um set for resolution ID: Res20x
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Resolution ID Res40x: for device Objective defined as Label=Nikon 40X Plan Flueor ELWD
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Pixel size 0.250000 um set for resolution ID: Res40x
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Resolution ID Res10x: for device Objective defined as Label=Nikon 10X S Fluor
+LOG(2013-01-31T10:08:43.827597, 2040, 000000000023C240:): Pixel size 1.000000 um set for resolution ID: Res10x
+DBG(2013-01-31T10:08:43.827597, 2040, t:000000000023C240:) Device Camera debug message: Setting Allowed Binning settings
+LOG(2013-01-31T10:08:43.828597, 2040, 000000000023C240:): > Notification from MMCore ignored since the system is still loading
+LOG(2013-01-31T10:08:43.828597, 2040, 000000000023C240:): > Notification for Device: Objective Property: State changed to value: 1
+LOG(2013-01-31T10:08:43.828597, 2040, 000000000023C240:): > Notification for Device: Objective Property: Label changed to value: Nikon 10X S Fluor
+LOG(2013-01-31T10:08:43.830597, 2040, 000000000023C240:): > Notification for Device: Camera Property: Binning changed to value: 1
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Configuration System/Startup applied.
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Waiting for device DHub...
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Finished waiting.
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Waiting for device Camera...
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Finished waiting.
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Waiting for device Dichroic...
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Finished waiting.
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Waiting for device Emission...
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Finished waiting.
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Waiting for device Excitation...
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Finished waiting.
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Waiting for device Objective...
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Finished waiting.
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Waiting for device Z...
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Finished waiting.
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Waiting for device Path...
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Finished waiting.
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Waiting for device XY...
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Finished waiting.
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Waiting for device Shutter...
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Finished waiting.
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Waiting for device Autofocus...
+DBG(2013-01-31T10:08:43.830597, 2040, t:000000000023C240:) Finished waiting.
+DBG(2013-01-31T10:08:43.831597, 2040, t:000000000023C240:) Device Camera debug message: Reading property ScanMode
+LOG(2013-01-31T10:08:43.832597, 2040, 000000000023C240:): System state cache updated.
+LOG(2013-01-31T10:08:43.849598, 2040, 000000000023C240:): Auto-focus device set to Autofocus
+DBG(2013-01-31T10:08:43.850598, 2040, t:000000000023C240:) Device Z debug message: Reporting position
+DBG(2013-01-31T10:08:43.852598, 2040, t:000000000023C240:) Device Camera debug message: Reading property ScanMode
+LOG(2013-01-31T10:08:43.853598, 2040, 000000000023C240:): System state cache updated.
+DBG(2013-01-31T10:08:43.853598, 2040, t:000000000023C240:) Device Z debug message: Reporting position
+LOG(2013-01-31T10:08:43.858598, 2040, 000000000023C240:): > Startup script file (C:\GitHub\jif\MMgrMaven/MMStartup.bsh) not present.
+LOG(2013-01-31T10:08:44.233620, 2040, 000000000023C240:): Auto-focus device set to Autofocus
+LOG(2013-01-31T10:08:44.321625, 2040, 000000000023C240:): Auto-focus device set to Autofocus
+LOG(2013-01-31T10:11:28.956041, 7040, 00000000002BE6D0:): -------->>
+LOG(2013-01-31T10:11:28.957041, 7040, 00000000002BE6D0:): Core session started on 2013-01-31T10:11:28.957041 by GBH on GBH-VAIO
+LOG(2013-01-31T10:11:28.957041, 7040, 00000000002BE6D0:): Debug logging disabled
+LOG(2013-01-31T10:11:28.957041, 7040, 00000000002BE6D0:): Debug logging enabled
+LOG(2013-01-31T10:11:28.957041, 7040, 00000000002BE6D0:): > MM Studio version: 1.4.11  20121102
+LOG(2013-01-31T10:11:28.957041, 7040, 00000000002BE6D0:): > MMCore version 2.3.2
+LOG(2013-01-31T10:11:28.958041, 7040, 00000000002BE6D0:): > Device API version 53, Module API version 7
+LOG(2013-01-31T10:11:28.958041, 7040, 00000000002BE6D0:): > Operating System: Windows 7 6.1
+LOG(2013-01-31T10:11:28.958041, 7040, 00000000002BE6D0:): > JVM: Java HotSpot(TM) 64-Bit Server VM, version 1.6.0_33; 64 bit
+DBG(2013-01-31T10:11:28.958041, 7040, t:00000000002BE6D0:) Circular buffer set to 25 MB.
+LOG(2013-01-31T10:11:31.112165, 7040, 00000000002BE6D0:): All devices unloaded.
+LOG(2013-01-31T10:11:31.112165, 7040, 00000000002BE6D0:): > Notification for Device: Core Property: Initialize changed to value: 0
+DBG(2013-01-31T10:11:31.112165, 7040, t:00000000002BE6D0:) Property set: device=Core, name=Initialize, value=0
+LOG(2013-01-31T10:11:31.114165, 7040, 00000000002BE6D0:): Device DHub loaded from DemoCamera and labeled as DHub
+LOG(2013-01-31T10:11:31.114165, 7040, 00000000002BE6D0:): Device DCam loaded from DemoCamera and labeled as Camera
+LOG(2013-01-31T10:11:31.114165, 7040, 00000000002BE6D0:): Device Camera set as default camera.
+LOG(2013-01-31T10:11:31.115165, 7040, 00000000002BE6D0:): Device DWheel loaded from DemoCamera and labeled as Dichroic
+LOG(2013-01-31T10:11:31.115165, 7040, 00000000002BE6D0:): Device DWheel loaded from DemoCamera and labeled as Emission
+LOG(2013-01-31T10:11:31.115165, 7040, 00000000002BE6D0:): Device DWheel loaded from DemoCamera and labeled as Excitation
+LOG(2013-01-31T10:11:31.115165, 7040, 00000000002BE6D0:): Device DObjective loaded from DemoCamera and labeled as Objective
+LOG(2013-01-31T10:11:31.116165, 7040, 00000000002BE6D0:): Device DStage loaded from DemoCamera and labeled as Z
+LOG(2013-01-31T10:11:31.116165, 7040, 00000000002BE6D0:): Device DLightPath loaded from DemoCamera and labeled as Path
+LOG(2013-01-31T10:11:31.116165, 7040, 00000000002BE6D0:): Device DXYStage loaded from DemoCamera and labeled as XY
+LOG(2013-01-31T10:11:31.116165, 7040, 00000000002BE6D0:): Device XY set as default xyStage.
+LOG(2013-01-31T10:11:31.117165, 7040, 00000000002BE6D0:): Device DShutter loaded from DemoCamera and labeled as Shutter
+LOG(2013-01-31T10:11:31.117165, 7040, 00000000002BE6D0:): Device Shutter set as default shutter.
+LOG(2013-01-31T10:11:31.117165, 7040, 00000000002BE6D0:): Device DAutoFocus loaded from DemoCamera and labeled as Autofocus
+LOG(2013-01-31T10:11:31.117165, 7040, 00000000002BE6D0:): Device Autofocus set as default auto-focus.
+LOG(2013-01-31T10:11:31.117165, 7040, 00000000002BE6D0:): Starting initialization sequence for 11 devices...
+LOG(2013-01-31T10:11:31.117165, 7040, 00000000002BE6D0:): Device DHub initialized.
+DBG(2013-01-31T10:11:31.117165, 7040, t:00000000002BE6D0:) Device Camera debug message: Setting Allowed Binning settings
+DBG(2013-01-31T10:11:31.118165, 7040, t:00000000002BE6D0:) Device Camera debug message: Reading property ScanMode
+LOG(2013-01-31T10:11:31.118165, 7040, 00000000002BE6D0:): Device Camera initialized.
+LOG(2013-01-31T10:11:31.118165, 7040, 00000000002BE6D0:): Device Dichroic initialized.
+LOG(2013-01-31T10:11:31.118165, 7040, 00000000002BE6D0:): Device Emission initialized.
+LOG(2013-01-31T10:11:31.119165, 7040, 00000000002BE6D0:): Device Excitation initialized.
+LOG(2013-01-31T10:11:31.119165, 7040, 00000000002BE6D0:): Device Objective initialized.
+LOG(2013-01-31T10:11:31.119165, 7040, 00000000002BE6D0:): Device Z initialized.
+LOG(2013-01-31T10:11:31.119165, 7040, 00000000002BE6D0:): Device Path initialized.
+LOG(2013-01-31T10:11:31.119165, 7040, 00000000002BE6D0:): Device XY initialized.
+LOG(2013-01-31T10:11:31.119165, 7040, 00000000002BE6D0:): Device Shutter initialized.
+LOG(2013-01-31T10:11:31.119165, 7040, 00000000002BE6D0:): Device Autofocus initialized.
+LOG(2013-01-31T10:11:31.119165, 7040, 00000000002BE6D0:): > Notification for Device: Core Property: Initialize changed to value: 1
+DBG(2013-01-31T10:11:31.119165, 7040, t:00000000002BE6D0:) Property set: device=Core, name=Initialize, value=1
+LOG(2013-01-31T10:11:31.119165, 7040, 00000000002BE6D0:): Camera device set to Camera
+LOG(2013-01-31T10:11:31.120165, 7040, 00000000002BE6D0:): > Notification for Device: Core Property: Camera changed to value: Camera
+DBG(2013-01-31T10:11:31.120165, 7040, t:00000000002BE6D0:) Property set: device=Core, name=Camera, value=Camera
+LOG(2013-01-31T10:11:31.120165, 7040, 00000000002BE6D0:): > Notification for Device: Core Property: Shutter changed to value: Shutter
+DBG(2013-01-31T10:11:31.120165, 7040, t:00000000002BE6D0:) Property set: device=Core, name=Shutter, value=Shutter
+LOG(2013-01-31T10:11:31.120165, 7040, 00000000002BE6D0:): Focus device set to Z
+LOG(2013-01-31T10:11:31.120165, 7040, 00000000002BE6D0:): > Notification for Device: Core Property: Focus changed to value: Z
+DBG(2013-01-31T10:11:31.120165, 7040, t:00000000002BE6D0:) Property set: device=Core, name=Focus, value=Z
+LOG(2013-01-31T10:11:31.120165, 7040, 00000000002BE6D0:): Auto shutter ON.
+LOG(2013-01-31T10:11:31.120165, 7040, 00000000002BE6D0:): > Notification for Device: Core Property: AutoShutter changed to value: 1
+DBG(2013-01-31T10:11:31.120165, 7040, t:00000000002BE6D0:) Property set: device=Core, name=AutoShutter, value=1
+DBG(2013-01-31T10:11:31.120165, 7040, t:00000000002BE6D0:) State 9 for device Dichroic defined as label State-9
+DBG(2013-01-31T10:11:31.120165, 7040, t:00000000002BE6D0:) State 8 for device Dichroic defined as label State-8
+DBG(2013-01-31T10:11:31.120165, 7040, t:00000000002BE6D0:) State 7 for device Dichroic defined as label State-7
+DBG(2013-01-31T10:11:31.120165, 7040, t:00000000002BE6D0:) State 6 for device Dichroic defined as label State-6
+DBG(2013-01-31T10:11:31.120165, 7040, t:00000000002BE6D0:) State 5 for device Dichroic defined as label State-5
+DBG(2013-01-31T10:11:31.120165, 7040, t:00000000002BE6D0:) State 4 for device Dichroic defined as label State-4
+DBG(2013-01-31T10:11:31.120165, 7040, t:00000000002BE6D0:) State 3 for device Dichroic defined as label State-3
+DBG(2013-01-31T10:11:31.121165, 7040, t:00000000002BE6D0:) State 2 for device Dichroic defined as label Q585LP
+DBG(2013-01-31T10:11:31.121165, 7040, t:00000000002BE6D0:) State 1 for device Dichroic defined as label Q505LP
+DBG(2013-01-31T10:11:31.121165, 7040, t:00000000002BE6D0:) State 0 for device Dichroic defined as label 400DCLP
+DBG(2013-01-31T10:11:31.121165, 7040, t:00000000002BE6D0:) State 9 for device Emission defined as label State-9
+DBG(2013-01-31T10:11:31.121165, 7040, t:00000000002BE6D0:) State 8 for device Emission defined as label State-8
+DBG(2013-01-31T10:11:31.121165, 7040, t:00000000002BE6D0:) State 7 for device Emission defined as label State-7
+DBG(2013-01-31T10:11:31.121165, 7040, t:00000000002BE6D0:) State 6 for device Emission defined as label State-6
+DBG(2013-01-31T10:11:31.121165, 7040, t:00000000002BE6D0:) State 5 for device Emission defined as label State-5
+DBG(2013-01-31T10:11:31.121165, 7040, t:00000000002BE6D0:) State 4 for device Emission defined as label State-4
+DBG(2013-01-31T10:11:31.121165, 7040, t:00000000002BE6D0:) State 3 for device Emission defined as label Chroma-HQ700
+DBG(2013-01-31T10:11:31.121165, 7040, t:00000000002BE6D0:) State 2 for device Emission defined as label Chroma-HQ535
+DBG(2013-01-31T10:11:31.122165, 7040, t:00000000002BE6D0:) State 1 for device Emission defined as label Chroma-D460
+DBG(2013-01-31T10:11:31.122165, 7040, t:00000000002BE6D0:) State 0 for device Emission defined as label Chroma-HQ620
+DBG(2013-01-31T10:11:31.122165, 7040, t:00000000002BE6D0:) State 9 for device Excitation defined as label State-9
+DBG(2013-01-31T10:11:31.122165, 7040, t:00000000002BE6D0:) State 8 for device Excitation defined as label State-8
+DBG(2013-01-31T10:11:31.122165, 7040, t:00000000002BE6D0:) State 7 for device Excitation defined as label State-7
+DBG(2013-01-31T10:11:31.122165, 7040, t:00000000002BE6D0:) State 6 for device Excitation defined as label State-6
+DBG(2013-01-31T10:11:31.122165, 7040, t:00000000002BE6D0:) State 5 for device Excitation defined as label State-5
+DBG(2013-01-31T10:11:31.122165, 7040, t:00000000002BE6D0:) State 4 for device Excitation defined as label State-4
+DBG(2013-01-31T10:11:31.122165, 7040, t:00000000002BE6D0:) State 3 for device Excitation defined as label Chroma-HQ620
+DBG(2013-01-31T10:11:31.122165, 7040, t:00000000002BE6D0:) State 2 for device Excitation defined as label Chroma-HQ570
+DBG(2013-01-31T10:11:31.123165, 7040, t:00000000002BE6D0:) State 1 for device Excitation defined as label Chroma-HQ480
+DBG(2013-01-31T10:11:31.123165, 7040, t:00000000002BE6D0:) State 0 for device Excitation defined as label Chroma-D360
+DBG(2013-01-31T10:11:31.123165, 7040, t:00000000002BE6D0:) State 5 for device Objective defined as label Objective-5
+DBG(2013-01-31T10:11:31.123165, 7040, t:00000000002BE6D0:) State 4 for device Objective defined as label Objective-4
+DBG(2013-01-31T10:11:31.123165, 7040, t:00000000002BE6D0:) State 3 for device Objective defined as label Nikon 20X Plan Fluor ELWD
+DBG(2013-01-31T10:11:31.123165, 7040, t:00000000002BE6D0:) State 2 for device Objective defined as label Objective-2
+DBG(2013-01-31T10:11:31.123165, 7040, t:00000000002BE6D0:) State 1 for device Objective defined as label Nikon 10X S Fluor
+DBG(2013-01-31T10:11:31.123165, 7040, t:00000000002BE6D0:) State 0 for device Objective defined as label Nikon 40X Plan Flueor ELWD
+DBG(2013-01-31T10:11:31.123165, 7040, t:00000000002BE6D0:) State 2 for device Path defined as label State-2
+DBG(2013-01-31T10:11:31.123165, 7040, t:00000000002BE6D0:) State 1 for device Path defined as label State-1
+DBG(2013-01-31T10:11:31.123165, 7040, t:00000000002BE6D0:) State 0 for device Path defined as label State-0
+LOG(2013-01-31T10:11:31.123165, 7040, 00000000002BE6D0:): Configuration Camera/MedRes: new setting for device Camera defined as Binning=2
+LOG(2013-01-31T10:11:31.123165, 7040, 00000000002BE6D0:): Configuration Camera/MedRes: new setting for device Camera defined as BitDepth=10
+LOG(2013-01-31T10:11:31.123165, 7040, 00000000002BE6D0:): Configuration Camera/HighRes: new setting for device Camera defined as Binning=1
+LOG(2013-01-31T10:11:31.123165, 7040, 00000000002BE6D0:): Configuration Camera/HighRes: new setting for device Camera defined as BitDepth=12
+LOG(2013-01-31T10:11:31.123165, 7040, 00000000002BE6D0:): Configuration Camera/LowRes: new setting for device Camera defined as Binning=4
+LOG(2013-01-31T10:11:31.123165, 7040, 00000000002BE6D0:): Configuration Camera/LowRes: new setting for device Camera defined as BitDepth=8
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Objective/20X: new setting for device Objective defined as State=3
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Objective/40X: new setting for device Objective defined as State=0
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Objective/10X: new setting for device Objective defined as State=1
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/FITC: new setting for device Dichroic defined as Label=Q505LP
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/FITC: new setting for device Emission defined as Label=Chroma-HQ535
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/FITC: new setting for device Excitation defined as Label=Chroma-HQ480
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/Rhodamine: new setting for device Dichroic defined as Label=Q585LP
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/Rhodamine: new setting for device Emission defined as Label=Chroma-HQ700
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/Rhodamine: new setting for device Excitation defined as Label=Chroma-HQ570
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/DAPI: new setting for device Dichroic defined as Label=400DCLP
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/DAPI: new setting for device Emission defined as Label=Chroma-HQ620
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/DAPI: new setting for device Excitation defined as Label=Chroma-D360
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/Cy5: new setting for device Dichroic defined as Label=400DCLP
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/Cy5: new setting for device Emission defined as Label=Chroma-HQ700
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration Channel/Cy5: new setting for device Excitation defined as Label=Chroma-HQ570
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration System/Startup: new setting for device Camera defined as BitDepth=16
+LOG(2013-01-31T10:11:31.124165, 7040, 00000000002BE6D0:): Configuration System/Startup: new setting for device Camera defined as ScanMode=1
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): Configuration System/Startup: new setting for device Objective defined as Label=Nikon 10X S Fluor
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): Configuration System/Startup: new setting for device Camera defined as Binning=1
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): Configuration LightPath/Camera-left: new setting for device Path defined as State=1
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): Configuration LightPath/Eyepiece: new setting for device Path defined as State=0
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): Configuration LightPath/Camera-right: new setting for device Path defined as State=2
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): Resolution ID Res20x: for device Objective defined as Label=Nikon 20X Plan Fluor ELWD
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): Pixel size 0.500000 um set for resolution ID: Res20x
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): Resolution ID Res40x: for device Objective defined as Label=Nikon 40X Plan Flueor ELWD
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): Pixel size 0.250000 um set for resolution ID: Res40x
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): Resolution ID Res10x: for device Objective defined as Label=Nikon 10X S Fluor
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): Pixel size 1.000000 um set for resolution ID: Res10x
+DBG(2013-01-31T10:11:31.125165, 7040, t:00000000002BE6D0:) Device Camera debug message: Setting Allowed Binning settings
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): > Notification from MMCore ignored since the system is still loading
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): > Notification for Device: Objective Property: State changed to value: 1
+LOG(2013-01-31T10:11:31.125165, 7040, 00000000002BE6D0:): > Notification for Device: Objective Property: Label changed to value: Nikon 10X S Fluor
+LOG(2013-01-31T10:11:31.127166, 7040, 00000000002BE6D0:): > Notification for Device: Camera Property: Binning changed to value: 1
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Configuration System/Startup applied.
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Waiting for device DHub...
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Finished waiting.
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Waiting for device Camera...
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Finished waiting.
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Waiting for device Dichroic...
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Finished waiting.
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Waiting for device Emission...
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Finished waiting.
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Waiting for device Excitation...
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Finished waiting.
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Waiting for device Objective...
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Finished waiting.
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Waiting for device Z...
+DBG(2013-01-31T10:11:31.127166, 7040, t:00000000002BE6D0:) Finished waiting.
+DBG(2013-01-31T10:11:31.128166, 7040, t:00000000002BE6D0:) Waiting for device Path...
+DBG(2013-01-31T10:11:31.128166, 7040, t:00000000002BE6D0:) Finished waiting.
+DBG(2013-01-31T10:11:31.128166, 7040, t:00000000002BE6D0:) Waiting for device XY...
+DBG(2013-01-31T10:11:31.128166, 7040, t:00000000002BE6D0:) Finished waiting.
+DBG(2013-01-31T10:11:31.128166, 7040, t:00000000002BE6D0:) Waiting for device Shutter...
+DBG(2013-01-31T10:11:31.128166, 7040, t:00000000002BE6D0:) Finished waiting.
+DBG(2013-01-31T10:11:31.128166, 7040, t:00000000002BE6D0:) Waiting for device Autofocus...
+DBG(2013-01-31T10:11:31.128166, 7040, t:00000000002BE6D0:) Finished waiting.
+DBG(2013-01-31T10:11:31.128166, 7040, t:00000000002BE6D0:) Device Camera debug message: Reading property ScanMode
+LOG(2013-01-31T10:11:31.129166, 7040, 00000000002BE6D0:): System state cache updated.
+LOG(2013-01-31T10:11:31.145167, 7040, 00000000002BE6D0:): Auto-focus device set to Autofocus
+DBG(2013-01-31T10:11:31.147167, 7040, t:00000000002BE6D0:) Device Z debug message: Reporting position
+DBG(2013-01-31T10:11:31.149167, 7040, t:00000000002BE6D0:) Device Camera debug message: Reading property ScanMode
+LOG(2013-01-31T10:11:31.150167, 7040, 00000000002BE6D0:): System state cache updated.
+DBG(2013-01-31T10:11:31.150167, 7040, t:00000000002BE6D0:) Device Z debug message: Reporting position
+LOG(2013-01-31T10:11:31.155167, 7040, 00000000002BE6D0:): > Startup script file (C:\GitHub\jif\MMgrMaven/MMStartup.bsh) not present.
+LOG(2013-01-31T10:11:31.570191, 7040, 00000000002BE6D0:): Auto-focus device set to Autofocus
+LOG(2013-01-31T10:11:31.663196, 7040, 00000000002BE6D0:): Auto-focus device set to Autofocus
+DBG(2013-01-31T10:11:31.745201, 7040, t:00000000002BE6D0:) Device Camera debug message: Reading property ScanMode

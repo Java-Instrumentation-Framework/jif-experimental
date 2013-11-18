@@ -1,0 +1,189 @@
+
+
+    //--------------------------------------------------------------------
+    C865_Controller ctrlX;
+    C865_Controller ctrlY;
+
+    public void open() {
+        // 1st camera...
+        try {
+            ctrlX = new C865_Controller(7);
+            ctrlY = new C865_Controller(6);
+            if (!ctrlX.open()) {
+                System.err.println("Failed to open ctrlX");
+                return;
+            }
+            System.out.println("X Axis opened and initialized.");
+            if (!ctrlY.open()) {
+                System.err.println("Failed to open ctrlY");
+                return;
+            }
+            System.out.println("Y Axis opened and initialized.");
+        } catch (Exception ex) {
+            return;
+        }
+    }
+
+    public void reference() {
+        // 1st camera...
+        try {
+            ctrlX.reference();
+            ctrlY.reference();
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+            }
+            System.out.println(" Referencing complete.");
+            // sets default velocities to 3 mm/sec.
+            ctrlX.setVelocity(3.0);
+            ctrlY.setVelocity(3.0);
+            this.setTaregtVelocity(3.0);
+        } catch (Exception ex) {
+            return;
+        }
+    }
+
+    public void moveX(double pos) {
+        try {
+            ctrlX.move(pos);
+        } catch (Exception ex) {
+            return;
+        }
+    }
+
+    public void moveY(double pos) {
+        try {
+            ctrlY.move(pos);
+        } catch (Exception ex) {
+            return;
+        }
+    }
+
+    private void getPos() {
+        // get current position
+        double posX = ctrlX.getPosition();
+        double posY = ctrlY.getPosition();
+        System.out.println("Pos: (" + posX + ", " + posY + ")");
+    }
+
+    public void moveTo(double x, double y) {
+        // Moves to point x,y at the currently set target velocity
+        double posX = ctrlX.getPosition();
+        double posY = ctrlY.getPosition();
+        double distX = Math.abs(x - posX);
+        double distY = Math.abs(y - posY);
+        // calc velocity for both axis
+        double dist = Math.sqrt(Math.pow(distX, 2.0) + Math.pow(distY, 2.0));
+        double time = dist / targetVel;
+        double velX = distX / time;
+        double velY = distY / time;
+        System.out.printf("posX %.6f, posY %.6f, distX %.6f, distY %.6f, dist %.6f, time %.6f, velX %.6f, velY %.6f \n",
+                posX, posY, distX, distY, dist, time, velX, velY);
+        try {
+            ctrlX.setVelocity(velX);
+            ctrlY.setVelocity(velY);
+            ctrlX.move(x);
+            System.out.println("MoveX done.");
+            ctrlY.move(y);
+            System.out.println("MoveY done.");
+        } catch (Exception ex) {
+            return;
+        }
+    }
+
+    public void monitor() {
+        // Tests to see that position can be query during a move.
+        moveTo(1.0, 10);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+        }
+        getPos();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+        }
+        getPos();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+        }
+        getPos();
+    }
+
+    public void close() {
+        // 1st camera....
+        try {
+            ctrlX.close();
+            ctrlY.close();
+        } catch (Exception ex) {
+            return;
+        }
+    }
+
+    public void setTaregtVelocity(double targetVel) {
+        this.targetVel = targetVel;
+    }
+
+    private void changeVelocityWhileMoving(double d) {
+        ctrlX.setVelocity(1.0);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException ex) {
+        }
+        moveX(0.001);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+        }
+        moveX(18.00);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+        }
+        ctrlX.setVelocity(4.0);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+        }
+        ctrlX.setVelocity(1.0);
+    }
+    // Diags -------------------------------------------------------------
+    public void inspectCam() {
+        //org.pf.joi.Inspector.inspect(ctrlX);
+    }
+
+    public void openJythonConsole() {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            /* (non-Javadoc)
+             * @see java.lang.Runnable#run()
+             */
+
+            public void run() {
+                /*
+                 * Instantiates a new Jython Console and shows it.
+                 * The newly created <code>JythonConsole</code will be centered
+                 * in the middle of the screen. (setPositionRelativeTo(null)
+                 */
+                JythonConsole console = new JythonConsole();
+                console.setLocationRelativeTo(null);
+                console.setVisible(true);
+            }
+
+        });
+    }
+
+    // Test Main....................................
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            public void run() {
+                TestPiC865 testlucam = new TestPiC865();
+
+            // org.pf.joi.Inspector.inspect(testlucam);
+            }
+
+        });
+    }
+
+}

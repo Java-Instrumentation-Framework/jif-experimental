@@ -1,0 +1,212 @@
+//StartupMacros for PolScope 
+
+//Global variables
+var retCeiling = call("ij.Prefs.get", "ps.retCeiling", "3.0");
+
+var leftEdge = 0;		//used in Area measurement
+var leftBgRet = 10.1;		//used in Area measurement
+var rightEdge = 10;		//used in Area measurement
+var rightBgRet = 10.1;		//used in Area measurement
+var measNr = 0;			//used in Area measurement
+var nmPerPixel = 87;		//used in Area measurement
+
+var pencilWidth=1, brushWidth=10, eraserWidth=10, leftClick=16, alt=8;
+
+macro "PolScope Tool - C059T1c12PTac12S" {}
+
+macro "PolScope Tool Selected" {
+	wait(10);
+	restorePreviousTool();
+	run("Preferences PS");
+}
+
+macro "Unused Tool-2 - " {}  // leave slot between dropper and pencil unused
+
+macro "Pencil Tool - C059L494fL4990L90b0Lc1c3L82a4Lb58bL7c4fDb4L5a5dL6b6cD7b" {
+        getCursorLoc(x, y, z, flags);
+        if (flags&alt!=0)
+              setColorToBackground();
+        draw(pencilWidth);
+   }
+
+  // Runs when the user double-clicks on the pencil tool icon
+  macro 'Pencil Tool Options...' {
+       pencilWidth = getNumber("Pencil Width (pixels):", pencilWidth);
+  }
+
+macro "Eraser Tool - C037R0aa4 P0a61f1aa0Pbef5f1" { 
+	setColorToBackground();
+	draw(eraserWidth);
+   }
+
+  // Runs when the user double-clicks on the eraser tool icon
+  macro 'Eraser Tool Options...' {
+      eraserWidth = getNumber("Eraser Width (pixels):", eraserWidth);
+  }
+
+macro "Flood Fill Tool -C037B21P085373b75d0L4d1aL3135L4050L6166D57D77D68La5adLb6bcD09D94" {
+	requires("1.34j");
+	setupUndo();
+	getCursorLoc(x, y, z, flags);
+	if (flags&alt!=0) setColorToBackground();
+	floodFill(x, y);
+    }
+
+  // Runs when the user double-clicks on the flood fill tool icon
+  macro 'Flood Fill Tool Options...' {
+      requires("1.34j");
+      restorePreviousTool();
+      run("Color Picker...");
+  }
+
+
+
+/******
+macro "Button_Panel_PS Tool - C059T3e16B" {}
+
+macro "Button_Panel_PS Tool Selected" {
+	restorePreviousTool();
+	run("Button Panel PS");
+}
+*****/
+
+
+macro "Calculate 5Fr [F5]" {
+	run("Calc 5Fr", "sample="+getTitle());
+}
+
+macro "Calculate 5Fr with Query [F6]" {
+	call("ij.Prefs.set", "ps.sampleStackTitle", getTitle());
+	call("ij.Prefs.savePreferences");
+	run("Calc 5Fr");
+}
+
+macro "Set Bg stack [F7]" {
+// activate background stack before running this macro
+	bgStackTitle = getTitle();
+	showStatus("Background stack: "+bgStackTitle);
+	call("ij.Prefs.set", "ps.bgStackTitle", bgStackTitle);
+	call("ij.Prefs.savePreferences");
+}
+
+macro "Enter Ret. Ceiling  [F8]" {
+// enter retardance ceiling value
+	retCeiling = call("ij.Prefs.get", "ps.retCeiling", "3.0");
+	retCeiling = getNumber("Retardance ceiling [nm]:", retCeiling);
+	showStatus("Retardance ceiling: "+retCeiling+" nm");
+	call("ij.Prefs.set", "ps.retCeiling", retCeiling);
+	call("ij.Prefs.savePreferences");
+}
+
+macro "Add 2 slices at beginning of PS stack  [F4]"  {
+/***
+result is one stack with as many slices as previous image stack
+plus 2 additional empty slices in the beginning;
+***/
+	run("Add Slice");
+	run("Previous Slice [<]");
+	run("Select All");
+	run("Cut");
+	run("Next Slice [>]");
+	setPasteMode("Copy");
+	run("Paste");
+	run("Previous Slice [<]");
+	run("Add Slice");
+	run("Previous Slice [<]");
+}
+
+macro "Delete Slice  [F3]" {
+	run("Delete Slice");
+}
+
+macro "Close all Images (Option: save as TIFF, then close)" {
+	closeAndSave="False";
+	if (isKeyDown("alt")) closeAndSave="True";
+	if (closeAndSave=="True") {
+		saveAs("tiff");
+		pathName=getDirectory("image");
+	}
+	close;
+	while (nImages>0) {
+		if (closeAndSave=="True") saveAs("tiff",pathName+getTitle());
+		close();
+	}
+}
+
+macro "Retardance Area " {
+/*** Calculates the retardance area from Plot Profile data.
+Don't scale images, but enter nmPerPixel in global variable above.
+Don't calibrate images, but use [F8] to enter retardance ceiling.
+Make box or line selection across fiber in image window and generate Plot Profile [command K].
+In plot profile window determine left and right fiber edge by eye.
+Return to image window with ROI active, start Retardance area macro and enter the values for left and right fiber edge.
+Results are shown in Results window.
+***/
+	leftEdge=getNumber("left fiber edge", leftEdge);	
+	rightEdge=getNumber("right fiber edge", rightEdge);
+	measNr = measNr + 1;
+	width = rightEdge-leftEdge;
+
+	u = newArray(width+1);
+	v = getProfile();
+
+	leftBgRet = v[leftEdge];
+	rightBgRet = v[rightEdge];
+	delta = (rightBgRet-leftBgRet)/width;
+	for(i=0; i<=width; i++) u[i] = v[i+leftEdge]-leftBgRet-delta*i;
+	
+	area = 0;
+	for(i=0; i<=width; i++) area += u[i];
+	area_nm2 = area*nmPerPixel*retCeiling/255;
+	MTs_num = area_nm2/7.5; // 7.5 nm^2 is the ret. area of a single MT
+	
+	write("\nMeasurement Nr. = "+measNr);
+	write("fiber width = "+d2s(width*nmPerPixel/1000,2)+" µm");
+	write("leftBgRet = "+d2s(leftBgRet*retCeiling/255,2)+" nm");
+	write("rightBgRet = "+d2s(rightBgRet*retCeiling/255,2)+" nm");
+	write("area = "+d2s(area_nm2,2)+" nm^2");
+	write("MTs = "+d2s(MTs_num,0));
+}
+
+macro "Retardance Legend" {
+	retMin=getNumber("retardance minimum in nm:",0);
+	retMax=getNumber("retardance maximum in nm:",10);
+	newImage("Ret Legend", "8-bit White", 294, 80, 1);
+	setColor(0); setFont("SansSerif",18,"antialiased"); setJustification("center");
+	fillRect(19,27,2,5); drawString(toString(retMin),21,53);
+	fillRect(145,27,2,5); drawString(toString((retMax+retMin)/2),148,53);
+	fillRect(272,27,2,5); drawString(toString(retMax),272,53);
+	drawString("retardance [nm]",146,72);
+	newImage("ramp", "8-bit Ramp", 256, 25, 1);
+	run("Select All"); run("Copy"); close();
+	makeRectangle(19, 2, 256, 25);
+	run("Paste");
+	run("Select None");
+}
+
+   function draw(width) {
+        requires("1.32g");
+        setupUndo();
+        getCursorLoc(x, y, z, flags);
+        setLineWidth(width);
+        moveTo(x,y);
+        x2=-1; y2=-1;
+        while (true) {
+            getCursorLoc(x, y, z, flags);
+            if (flags&leftClick==0) exit();
+            if (x!=x2 || y!=y2)
+                lineTo(x,y);
+            x2=x; y2 =y;
+            wait(10);
+        }
+   }
+
+   function setColorToBackground() {
+       savep = getPixel(0, 0);
+       makeRectangle(0, 0, 1, 1);
+       run("Clear");
+       background = getPixel(0, 0);
+       run("Select None");
+       setPixel(0, 0, savep);
+       setColor(background);
+   }
