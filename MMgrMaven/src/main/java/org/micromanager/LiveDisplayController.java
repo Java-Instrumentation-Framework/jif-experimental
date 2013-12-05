@@ -15,10 +15,12 @@ import org.json.JSONObject;
 //import org.micromanager.acquisition.MMAcquisition;
 //import org.micromanager.acquisition.ProcessorStack;
 import org.micromanager.acquisition.SequenceSettings;
+import org.micromanager.api.Autofocus;
 //import org.micromanager.acquisition.TaggedImageQueue;
 //import org.micromanager.api.AcquisitionEngine;
 //import org.micromanager.api.DataProcessor;
 import org.micromanager.api.IAcquisitionEngine2010;
+import org.micromanager.api.PositionList;
 //import org.micromanager.utils.ReportingUtils;
 
 /**
@@ -106,7 +108,7 @@ public class LiveDisplayController {
 			return run(sequenceSettings, false);
 		}
 
-		@Override
+		//@Override
 		public BlockingQueue<TaggedImage> run(SequenceSettings sequenceSettings, boolean cleanup) {
 			return new LinkedBlockingDeque<TaggedImage>();
 		}
@@ -170,6 +172,21 @@ public class LiveDisplayController {
 		public void clearRunnables() {
 			throw new UnsupportedOperationException("Not supported yet.");
 		}
+
+      @Override
+      public BlockingQueue<TaggedImage> run(org.micromanager.api.SequenceSettings sequenceSettings) {
+         throw new UnsupportedOperationException("Not supported yet.");
+      }
+
+      @Override
+      public BlockingQueue<TaggedImage> run(org.micromanager.api.SequenceSettings sequenceSettings, boolean cleanup, PositionList positionList, Autofocus device) {
+         throw new UnsupportedOperationException("Not supported yet.");
+      }
+
+      @Override
+      public BlockingQueue<TaggedImage> run(org.micromanager.api.SequenceSettings sequenceSettings, boolean cleanup) {
+         throw new UnsupportedOperationException("Not supported yet.");
+      }
 
 	}
 }

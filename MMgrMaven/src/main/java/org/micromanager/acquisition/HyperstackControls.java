@@ -36,10 +36,6 @@ public class HyperstackControls extends DisplayControls {
       fpsField.setText(NumberUtils.doubleToDisplayString(acq_.getPlaybackFPS()));
    }
 
-   public HyperstackControls(mytestplugin.VirtualAcquisitionDisplay aThis) {
-      throw new UnsupportedOperationException("Not supported yet.");
-   }
-
    /** This method is called from within the constructor to
     * initialize the form.
     * WARNING: Do NOT modify this code. The content of this method is

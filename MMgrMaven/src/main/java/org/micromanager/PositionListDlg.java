@@ -19,7 +19,7 @@
 //IN NO EVENT SHALL THE COPYRIGHT OWNER OR
 //CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 
-//CVS:          $Id: PositionListDlg.java 11087 2013-05-17 22:52:33Z nico $
+//CVS:          $Id: PositionListDlg.java 12089 2013-11-07 20:07:26Z nenad $
 
 package org.micromanager;
 
@@ -57,16 +57,18 @@ import mmcorej.CMMCore;
 import mmcorej.DeviceType;
 import mmcorej.StrVector;
 
-import org.micromanager.navigation.MultiStagePosition;
-import org.micromanager.navigation.PositionList;
-import org.micromanager.navigation.StagePosition;
 import org.micromanager.utils.GUIColors;
 import org.micromanager.utils.MMDialog;
 
 import com.swtdesigner.SwingResourceManager;
+
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.micromanager.api.MultiStagePosition;
+import org.micromanager.api.PositionList;
 import org.micromanager.api.ScriptInterface;
+import org.micromanager.api.StagePosition;
 import org.micromanager.utils.FileDialogs;
 import org.micromanager.utils.FileDialogs.FileType;
 import org.micromanager.utils.GUIUtils;
@@ -224,7 +226,7 @@ public class PositionListDlg extends MMDialog implements MouseListener, ChangeLi
    private class AxisTableModel extends AbstractTableModel {
       private static final long serialVersionUID = 1L;
       public final String[] COLUMN_NAMES = new String[] {
-            "Use",
+            "Record",
             "Axis"
       };
       
@@ -776,22 +778,23 @@ public void addPosition(MultiStagePosition msp, String label) {
     */
    public void markPosition() {
       refreshCurrentPosition();
-      MultiStagePosition msp = new MultiStagePosition();
-      msp = curMsp_;
+      MultiStagePosition msp = curMsp_;
 
       PosTableModel ptm = (PosTableModel)posTable_.getModel();
-      MultiStagePosition selMsp = ptm.getPositionList().getPosition(posTable_.getSelectedRow() -1);
+      MultiStagePosition selMsp = 
+              ptm.getPositionList().getPosition(posTable_.getSelectedRow() -1);
 
-      int selectedRow = 0;
       if (selMsp == null) {
          msp.setLabel(ptm.getPositionList().generateLabel());
          ptm.getPositionList().addPosition(msp);
          ptm.fireTableDataChanged();
          gui_.getAcqDlg().updateGUIContents();
       } else { // replace instead of add 
-         msp.setLabel(ptm.getPositionList().getPosition(posTable_.getSelectedRow() - 1).getLabel() );
-         selectedRow = posTable_.getSelectedRow();
-         ptm.getPositionList().replacePosition(posTable_.getSelectedRow() -1, msp);
+         msp.setLabel(ptm.getPositionList().getPosition(
+                 posTable_.getSelectedRow() - 1).getLabel() );
+         int selectedRow = posTable_.getSelectedRow();
+         ptm.getPositionList().replacePosition(
+                 posTable_.getSelectedRow() -1, msp);
          ptm.fireTableCellUpdated(selectedRow, 1);
          // Not sure why this is here as we undo the selecion after 
          // this functions exits...

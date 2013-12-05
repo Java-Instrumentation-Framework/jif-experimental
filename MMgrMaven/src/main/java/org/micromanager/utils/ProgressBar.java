@@ -19,19 +19,17 @@
 //               CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 //               INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES.
 //
-// CVS:          $Id: ProgressBar.java 11054 2013-05-14 21:59:21Z henry $
+// CVS:          $Id: ProgressBar.java 12081 2013-11-06 21:27:25Z nico $
 //
 package org.micromanager.utils;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
 
 
 public class ProgressBar extends JPanel {
@@ -66,6 +64,7 @@ public class ProgressBar extends JPanel {
       progressBar.repaint();
    }
 
+   @Override
    public void setVisible(boolean visible) {
       frame.setVisible(visible);
    }

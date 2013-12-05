@@ -43,8 +43,8 @@ import mmcorej.MMCoreJ;
 import mmcorej.StrVector;
 
 import org.micromanager.api.MMListenerInterface;
-import org.micromanager.navigation.MultiStagePosition;
-import org.micromanager.navigation.StagePosition;
+import org.micromanager.api.MultiStagePosition;
+import org.micromanager.api.StagePosition;
 import org.micromanager.utils.MMDialog;
 import org.micromanager.utils.NumberUtils;
 import org.micromanager.utils.ReportingUtils;
@@ -58,6 +58,8 @@ public class TileCreatorDlg extends MMDialog implements MMListenerInterface {
 
    private JTextField overlapField_;
    private JComboBox overlapUnitsCombo_;
+
+   
 
    
    private enum OverlapUnitEnum {UM, PX, PERCENT};
@@ -697,7 +699,7 @@ public class TileCreatorDlg extends MMDialog implements MMListenerInterface {
       double maxX = Double.NEGATIVE_INFINITY;
       double maxY = Double.NEGATIVE_INFINITY; 
       double meanZ = 0.0;
-      StagePosition sp = new StagePosition();
+      StagePosition sp;
       for (int i=0; i<4; i++) {
           if (endPositionSet_[i]) {
               sp = endPosition_[i].get(endPosition_[i].getDefaultXYStage());
@@ -958,6 +960,9 @@ public class TileCreatorDlg extends MMDialog implements MMListenerInterface {
    }
 
    public void configGroupChangedAlert(String groupName, String newConfig) {
+   }
+   
+   public void systemConfigurationLoaded() {
    }
 
    public void pixelSizeChangedAlert(double newPixelSizeUm) {

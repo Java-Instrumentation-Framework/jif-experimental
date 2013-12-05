@@ -2,6 +2,7 @@ package org.micromanager.acquisition;
 
 import ij.CompositeImage;
 import ij.gui.ImageWindow;
+
 import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -9,15 +10,15 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.prefs.Preferences;
+
 import mmcorej.TaggedImage;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.micromanager.api.AcquisitionEngine;
 import org.micromanager.api.ImageCache;
 import org.micromanager.utils.GUIUtils;
 import org.micromanager.utils.MDUtils;
-
 import org.micromanager.utils.MMScriptException;
 import org.micromanager.utils.ReportingUtils;
 
@@ -82,11 +83,34 @@ public class AcquisitionManager {
       }
    }
    
-   public void closeImageWindow(String name) throws MMScriptException {
+   /**
+    * Closes display window associated with an acquisition
+    * @param name of acquisition
+    * @return false if canceled by user, true otherwise
+    * @throws MMScriptException 
+    */
+   public boolean closeImageWindow(String name) throws MMScriptException {
       if (!acquisitionExists(name))
          throw new MMScriptException("The name does not exist");
-      else
-         acqs_.get(name).closeImageWindow();
+      
+      return acqs_.get(name).closeImageWindow();
+   }
+   
+   /**
+    * Closes all windows associated with acquisitions
+    * Can be interrupted by the user (by pressing cancel)
+    * 
+    * @return false is saving was canceled, true otherwise
+    * @throws MMScriptException 
+    */
+   public boolean closeAllImageWindows() throws MMScriptException {
+      String[] acqNames = getAcqusitionNames();
+      for (String acqName : acqNames) {
+         if (!closeImageWindow(acqName)) {
+            return false;
+         }
+      }       
+      return true;
    }
    
    public boolean acquisitionExists(String name) {
@@ -111,9 +135,9 @@ public class AcquisitionManager {
    }
 
    public void closeAll() {
-      for (Enumeration<MMAcquisition> e=acqs_.elements(); e.hasMoreElements(); )
+      for (Enumeration<MMAcquisition> e=acqs_.elements(); e.hasMoreElements(); ) {
          e.nextElement().close();
-      
+      }
       acqs_.clear();
    }
 

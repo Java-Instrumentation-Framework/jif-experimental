@@ -29,10 +29,8 @@ import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import mmcorej.CMMCore;
 import mmcorej.TaggedImage;
-import org.json.JSONException;
 import org.micromanager.MMStudioMainFrame;
-import org.micromanager.utils.MDUtils;
-import org.micromanager.utils.MMScriptException;
+import org.micromanager.utils.CanvasPaintPending;
 import org.micromanager.utils.ReportingUtils;
 
 /**
@@ -43,7 +41,6 @@ import org.micromanager.utils.ReportingUtils;
  */
 public class LiveModeTimer {
 
-   private static final String CCHANNELINDEX = "CameraChannelIndex";
    private static final String ACQ_NAME = MMStudioMainFrame.SIMPLE_ACQ;
    private VirtualAcquisitionDisplay win_;
    private CMMCore core_;
@@ -52,7 +49,6 @@ public class LiveModeTimer {
    private long fpsTimer_;
    private long fpsCounter_;
    private long imageNumber_;
-   private long lastImageNumber_;
    private long oldImageNumber_;
    private long fpsInterval_ = 5000;
    private final NumberFormat format_;
@@ -61,18 +57,40 @@ public class LiveModeTimer {
    private TimerTask task_;
    private MMStudioMainFrame.DisplayImageRoutine displayImageRoutine_;
    private LinkedBlockingQueue imageQueue_;
+   private static int mCamImageCounter_ = 0;
+   private boolean multiCam_ = false;
    
    public LiveModeTimer() {
       gui_ = MMStudioMainFrame.getInstance();
       core_ = gui_.getCore();
       format_ = NumberFormat.getInstance();
       format_.setMaximumFractionDigits(0x1);
+      mCamImageCounter_ = 0;
       displayImageRoutine_ = new MMStudioMainFrame.DisplayImageRoutine() {
          public void show(final TaggedImage ti) {
             try {
-               gui_.normalizeTags(ti);
-               gui_.addImage(ACQ_NAME, ti, true, true);
-               gui_.updateLineProfile();
+               // The multiCamLiveTask needs synchronization at this point
+               // The multiCamLiveTask generates tagged images in groups of
+               // multiChannelCameraNrCh_, however, we only want to update
+               // the display (which is costly) when we have the whole group
+               if (multiCam_) {
+                  mCamImageCounter_++;
+                  if (mCamImageCounter_ < multiChannelCameraNrCh_) {
+                     gui_.normalizeTags(ti);
+                     gui_.addImage(ACQ_NAME, ti, false, false);
+                     return;
+                  } else { // completes the set
+                     mCamImageCounter_ = 0;
+                  }              
+               }
+               if (!CanvasPaintPending.isMyPaintPending(
+                        gui_.getImageWin().getCanvas(), this) ) {
+                  CanvasPaintPending.setPaintPending(
+                        gui_.getImageWin().getCanvas(), this);
+                  gui_.normalizeTags(ti);
+                  gui_.addImage(ACQ_NAME, ti, true, true);
+                  gui_.updateLineProfile();
+               }
             } catch (Exception e) {
                ReportingUtils.logError(e);
             }
@@ -105,8 +123,10 @@ public class LiveModeTimer {
       multiChannelCameraNrCh_ = (int) core_.getNumberOfCameraChannels();
       if (multiChannelCameraNrCh_ == 1) {
          task_ = singleCameraLiveTask();
+         multiCam_ = false;
       } else {
          task_ = multiCamLiveTask();
+         multiCam_ = true;
       }
    }
 
@@ -147,7 +167,6 @@ public class LiveModeTimer {
          fpsCounter_ = 0;
          fpsTimer_ = System.currentTimeMillis();
          imageNumber_ = timg.tags.getLong("ImageNumber");
-         lastImageNumber_ = imageNumber_ - 1;
          oldImageNumber_ = imageNumber_;
 
          imageQueue_ = new LinkedBlockingQueue();
@@ -257,8 +276,6 @@ public class LiveModeTimer {
                gui_.enableLiveMode(false);
             } else {
                try {
-
-                  
                   TaggedImage ti = core_.getLastTaggedImage();
                   // if we have already shown this image, do not do it again.
                   setImageNumber(ti.tags.getLong("ImageNumber"));
@@ -289,15 +306,16 @@ public class LiveModeTimer {
                   Set<String> cameraChannelsAcquired = new HashSet<String>();
                   for (int i = 0; i < 2 * multiChannelCameraNrCh_; ++i) {
                      TaggedImage ti = core_.getNBeforeLastTaggedImage(i);
-                     if (i == 0) {
-                        setImageNumber(ti.tags.getLong("ImageNumber"));
-                     }
                      String channelName;
                      if (ti.tags.has(camera + "-CameraChannelName")) {
                         channelName = ti.tags.getString(camera + "-CameraChannelName");
                         if (!cameraChannelsAcquired.contains(channelName)) {
                            ti.tags.put("Channel", channelName);
-                           ti.tags.put("ChannelIndex", ti.tags.getInt(camera + "-CameraChannelIndex"));
+                           int ccIndex = ti.tags.getInt(camera + "-CameraChannelIndex");
+                           ti.tags.put("ChannelIndex", ccIndex);
+                           if (ccIndex == 0) {
+                              setImageNumber(ti.tags.getLong("ImageNumber"));
+                           }
                            imageQueue_.put(ti);
                            cameraChannelsAcquired.add(channelName);
                         }
@@ -317,36 +335,4 @@ public class LiveModeTimer {
       };
    }
 
-   /*
-   private void addTags(TaggedImage ti, int channel) throws JSONException {
-      MDUtils.setChannelIndex(ti.tags, channel);
-      MDUtils.setFrameIndex(ti.tags, 0);
-      MDUtils.setPositionIndex(ti.tags, 0);
-      MDUtils.setSliceIndex(ti.tags, 0);
-      try {
-         ti.tags.put("Summary", MMStudioMainFrame.getInstance().getAcquisition(ACQ_NAME).getSummaryMetadata());
-      } catch (MMScriptException ex) {
-         ReportingUtils.logError("Error adding summary metadata to tags");
-      }
-      gui_.addStagePositionToTags(ti);
-   }
-   
-   
-   private TaggedImage makeTaggedImage(Object pixels) throws JSONException, MMScriptException {
-       TaggedImage ti = ImageUtils.makeTaggedImage(pixels,
-                    0, 0, 0, 0,
-                    gui_.getAcquisitionImageWidth(ACQ_NAME),
-                    gui_.getAcquisitionImageHeight(ACQ_NAME),
-                    gui_.getAcquisitionImageByteDepth(ACQ_NAME));
-      try {
-         ti.tags.put("Summary", gui_.getAcquisition(ACQ_NAME).getSummaryMetadata());
-
-      } catch (MMScriptException ex) {
-         ReportingUtils.logError("Error adding summary metadata to tags");
-      }
-      gui_.addStagePositionToTags(ti);
-      return ti;
-   }
-    * 
-    */
 }

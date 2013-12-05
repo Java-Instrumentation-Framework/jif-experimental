@@ -19,7 +19,7 @@
 //               CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 //               INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES.
 //
-// CVS:          $Id: OptionsDlg.java 10873 2013-04-25 22:32:34Z arthur $
+// CVS:          $Id: OptionsDlg.java 12133 2013-11-17 06:24:53Z nico $
 package org.micromanager;
 
 import java.awt.Dimension;
@@ -66,15 +66,12 @@ public class OptionsDlg extends MMDialog {
    private JComboBox comboDisplayBackground_;
    private ScriptInterface parent_;
    private GUIColors guiColors_;
-   private String currentCfgPath_;
-   private JComboBox windowZoomCombo_;
 
    /**
     * Create the dialog
     */
-   public OptionsDlg(MMOptions opts, CMMCore core, Preferences mainPrefs, ScriptInterface parent, String cfgPath) {
+   public OptionsDlg(MMOptions opts, CMMCore core, Preferences mainPrefs, ScriptInterface parent) {
       super();
-      currentCfgPath_ = cfgPath;
       parent_ = parent;
       addWindowListener(new WindowAdapter() {
 

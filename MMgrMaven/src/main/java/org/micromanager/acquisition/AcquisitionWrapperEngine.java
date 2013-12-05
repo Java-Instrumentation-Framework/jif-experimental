@@ -11,20 +11,23 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.prefs.Preferences;
+
 import javax.swing.JOptionPane;
+
 import mmcorej.CMMCore;
 import mmcorej.Configuration;
 import mmcorej.PropertySetting;
 import mmcorej.StrVector;
 import mmcorej.TaggedImage;
+
 import org.json.JSONObject;
-import org.micromanager.api.AcquisitionEngine;
 import org.micromanager.api.DataProcessor;
 import org.micromanager.api.ImageCache;
 import org.micromanager.api.IAcquisitionEngine2010;
+import org.micromanager.api.PositionList;
 import org.micromanager.api.ScriptInterface;
+import org.micromanager.api.SequenceSettings;
 import org.micromanager.internalinterfaces.AcqSettingsListener;
-import org.micromanager.navigation.PositionList;
 import org.micromanager.utils.AcqOrderMode;
 import org.micromanager.utils.AutofocusManager;
 import org.micromanager.utils.ChannelSpec;
@@ -72,16 +75,18 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
    protected JSONObject summaryMetadata_;
    protected ImageCache imageCache_;
    private ArrayList<AcqSettingsListener> settingsListeners_;
+   private AcquisitionManager acqManager_;
 
-   public AcquisitionWrapperEngine() {
+   public AcquisitionWrapperEngine(AcquisitionManager mgr) {
       imageRequestProcessors_ = new ArrayList<Class>();
       taggedImageProcessors_ = new ArrayList<DataProcessor<TaggedImage>>();
       useCustomIntervals_ = false;
       settingsListeners_ = new ArrayList<AcqSettingsListener>();
+      acqManager_ = mgr;
    }
 
    public String acquire() throws MMException {
-      return runAcquisition(getSequenceSettings());
+      return runAcquisition(getSequenceSettings(), acqManager_);
    }
 
    public void addSettingsListener(AcqSettingsListener listener) {
@@ -105,7 +110,7 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
       return acquisitionEngine2010;
    }
 
-   protected String runAcquisition(SequenceSettings acquisitionSettings) {
+   protected String runAcquisition(SequenceSettings acquisitionSettings, AcquisitionManager acqManager) {
       //Make sure computer can write to selected location and that there is enough space to do so
       if (saveFiles_) {
          File root = new File(rootName_);
@@ -128,14 +133,15 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
       }
       try {
          DefaultTaggedImagePipeline taggedImagePipeline = new DefaultTaggedImagePipeline(
-                 getAcquisitionEngine2010(),
-                 acquisitionSettings,
-                 taggedImageProcessors_,
-                 gui_,
-                 acquisitionSettings.save);
-         summaryMetadata_ = taggedImagePipeline.summaryMetadata_;
-         imageCache_ = taggedImagePipeline.imageCache_;
-         return taggedImagePipeline.acqName_;
+               getAcquisitionEngine2010(),
+               acquisitionSettings,
+               taggedImageProcessors_,
+               gui_,
+               acquisitionSettings.save);
+       summaryMetadata_ = taggedImagePipeline.summaryMetadata_;
+       imageCache_ = taggedImagePipeline.imageCache_;
+       return taggedImagePipeline.acqName_;
+       
       } catch (Throwable ex) {
          ReportingUtils.showError(ex);
          return null;
@@ -146,7 +152,7 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
       int numChannels = 0;
       if (useChannels_) {
          for (ChannelSpec channel : channels_) {
-            if (channel.useChannel_) {
+            if (channel.useChannel) {
                ++numChannels;
             }
          }
@@ -173,11 +179,14 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
    }
 
    private int getNumSlices() {
-      int numSlices = useSlices_ ? (int) (1 + Math.abs(sliceZTopUm_ - sliceZBottomUm_) / sliceZStepUm_) : 1;
       if (!useSlices_) {
-         numSlices = 1;
+         return 1;
       }
-      return numSlices;
+      if (sliceZStepUm_ == 0) {
+         // XXX How should this be handled?
+         return Integer.MAX_VALUE;
+      }
+      return 1 + (int)Math.abs((sliceZTopUm_ - sliceZBottomUm_) / sliceZStepUm_);
    }
 
    private int getTotalImages() {
@@ -193,7 +202,7 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
 
    private void updateChannelCameras() {
       for (ChannelSpec channel : channels_) {
-         channel.camera_ = getSource(channel);
+         channel.camera = getSource(channel);
       }
    }
 
@@ -217,7 +226,7 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
    private String getSource(ChannelSpec channel) {
       PropertySetting setting;
       try {
-         Configuration state = core_.getConfigGroupState(channel.config_);
+         Configuration state = core_.getConfigState(core_.getChannelGroup(), channel.config);
          if (state.isPropertyIncluded("Core", "Camera")) {
             return state.getSetting("Core", "Camera").getPropertyValue();
          } else {
@@ -255,7 +264,9 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
    }
 
    public void addImageProcessor(DataProcessor<TaggedImage> taggedImageProcessor) {
-      taggedImageProcessors_.add(taggedImageProcessor);
+      if (!taggedImageProcessors_.contains(taggedImageProcessor)) {
+         taggedImageProcessors_.add(taggedImageProcessor);
+      }
    }
 
    public void removeImageProcessor(DataProcessor<TaggedImage> taggedImageProcessor) {
@@ -280,18 +291,20 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
          acquisitionSettings.numFrames = 0;
       }
 
-
-
       // Slices
       if (useSlices_) {
-         if (sliceZTopUm_ > sliceZBottomUm_) {
-            for (double z = sliceZBottomUm_; z <= sliceZTopUm_; z += sliceZStepUm_) {
-               acquisitionSettings.slices.add(z);
-            }
-         } else {
-            for (double z = sliceZBottomUm_; z >= sliceZTopUm_; z -= sliceZStepUm_) {
-               acquisitionSettings.slices.add(z);
-            }
+         double start = sliceZBottomUm_;
+         double stop = sliceZTopUm_;
+         double step = Math.abs(sliceZStepUm_);
+         if (step == 0.0) {
+            throw new UnsupportedOperationException("zero Z step size");
+         }
+         int count = getNumSlices();
+         if (start > stop) {
+            step = -step;
+         }
+         for (int i = 0; i < count; i++) {
+            acquisitionSettings.slices.add(start + i * step);
          }
       }
 
@@ -307,17 +320,12 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
 
       if (this.useChannels_) {
          for (ChannelSpec channel : channels_) {
-            if (channel.useChannel_) {
+            if (channel.useChannel) {
                acquisitionSettings.channels.add(channel);
             }
          }
+         acquisitionSettings.channelGroup = core_.getChannelGroup();
       }
-
-      // Positions
-      if (this.useMultiPosition_) {
-         acquisitionSettings.positions.addAll(Arrays.asList(posList_.getPositions()));
-      }
-
 
       //timeFirst = true means that time points are collected at each position
       acquisitionSettings.timeFirst = (acqOrderMode_ == AcqOrderMode.POS_TIME_CHANNEL_SLICE
@@ -337,6 +345,7 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
          acquisitionSettings.prefix = dirName_;
       }
       acquisitionSettings.comment = comment_;
+      acquisitionSettings.usePositionList = this.useMultiPosition_;
       return acquisitionSettings;
    }
 
@@ -493,7 +502,7 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
             try {
                core_.setChannelGroup("");
             } catch (Exception ex) {
-               ReportingUtils.showError(e);
+                ReportingUtils.showError(ex);
             }
             return false;
          }
@@ -636,14 +645,14 @@ public class AcquisitionWrapperEngine implements AcquisitionEngine {
    public boolean addChannel(String config, double exp, Boolean doZStack, double zOffset, ContrastSettings con, int skip, Color c, boolean use) {
       if (isConfigAvailable(config)) {
          ChannelSpec channel = new ChannelSpec();
-         channel.config_ = config;
-         channel.useChannel_ = use;
-         channel.exposure_ = exp;
-         channel.doZStack_ = doZStack;
-         channel.zOffset_ = zOffset;
-         channel.contrast_ = con;
-         channel.color_ = c;
-         channel.skipFactorFrame_ = skip;
+         channel.config = config;
+         channel.useChannel = use;
+         channel.exposure = exp;
+         channel.doZStack = doZStack;
+         channel.zOffset = zOffset;
+         channel.contrast = con;
+         channel.color = c;
+         channel.skipFactorFrame = skip;
          channels_.add(channel);
          return true;
       } else {

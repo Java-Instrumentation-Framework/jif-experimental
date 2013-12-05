@@ -19,7 +19,7 @@
 //CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 //INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES.
 
-//CVS:          $Id: LargeMessageDlg.java 1281 2008-06-04 20:59:50Z nenad $
+//CVS:          $Id: LargeMessageDlg.java 12081 2013-11-06 21:27:25Z nico $
 
 package org.micromanager.utils;
 
@@ -51,6 +51,7 @@ public class LargeMessageDlg extends JDialog {
    public LargeMessageDlg(String title, String message) {
       super();
       addWindowListener(new WindowAdapter() {
+         @Override
          public void windowOpened(WindowEvent e) {
             scrollPane_.getVerticalScrollBar().setValue(0);
          }

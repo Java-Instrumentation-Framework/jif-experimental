@@ -20,7 +20,7 @@
 //CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 //INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES.
 
-//CVS:          $Id: ConfigGroupPad.java 10390 2012-12-24 01:57:04Z nico $
+//CVS:          $Id: ConfigGroupPad.java 12056 2013-11-01 03:24:56Z nico $
 
 package org.micromanager;
 
@@ -226,7 +226,7 @@ public class ConfigGroupPad extends JScrollPane{
                   refreshStatus();
                   repaint();
                   if (parentGUI_ != null)
-                     parentGUI_.updateGUI(false);
+                     parentGUI_.refreshGUI();
                   
                   if (restartLive)
                        parentGUI_.enableLiveMode(true);

@@ -22,6 +22,7 @@
 package org.micromanager.acquisition;
 
 import ij.ImagePlus;
+
 import java.awt.Color;
 import java.io.File;
 import java.net.InetAddress;
@@ -33,8 +34,8 @@ import java.util.UUID;
 import java.util.prefs.Preferences;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import mmcorej.CMMCore;
 
+import mmcorej.CMMCore;
 import mmcorej.TaggedImage;
 
 import org.json.JSONArray;
@@ -42,9 +43,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 import org.micromanager.AcqControlDlg;
 import org.micromanager.MMStudioMainFrame;
-import org.micromanager.api.AcquisitionEngine;
 import org.micromanager.api.ImageCache;
-
 import org.micromanager.api.TaggedImageStorage;
 import org.micromanager.utils.ImageUtils;
 import org.micromanager.utils.JavaUtils;
@@ -533,6 +532,7 @@ public class MMAcquisition {
          tags.put("Channel", getChannelName(channel));
          tags.put("ChannelIndex", channel);
          tags.put("Frame", frame);
+         tags.put("FrameIndex", frame);
          tags.put("Height", height_);
          tags.put("PositionIndex", position);
          // the following influences the format data will be saved!
@@ -551,6 +551,7 @@ public class MMAcquisition {
       }
    }
 
+   // Somebody please comment on why this is a separate method from insertImage.
    public void insertTaggedImage(TaggedImage taggedImg, int frame, int channel, int slice)
            throws MMScriptException {
       if (!initialized_) {
@@ -561,12 +562,11 @@ public class MMAcquisition {
       try {
          JSONObject tags = taggedImg.tags;
 
-         tags.put("FrameIndex", frame);
-         tags.put("Frame", frame);
-         tags.put("ChannelIndex", channel);
-         tags.put("SliceIndex", slice);
+         MDUtils.setFrameIndex(tags, frame);
+         MDUtils.setChannelIndex(tags, channel);
+         MDUtils.setSliceIndex(tags, slice);
          MDUtils.setPixelTypeFromByteDepth(tags, byteDepth_);
-         tags.put("PositionIndex", 0);
+         MDUtils.setPositionIndex(tags, 0);
          insertImage(taggedImg);
       } catch (JSONException e) {
          throw new MMScriptException(e);
@@ -575,28 +575,31 @@ public class MMAcquisition {
 
    public void insertImage(TaggedImage taggedImg, int frame, int channel, int slice,
            int position) throws MMScriptException, JSONException {
-      taggedImg.tags.put("FrameIndex", frame);
-      taggedImg.tags.put("ChannelIndex", channel);
-      taggedImg.tags.put("SliceIndex", slice);
-      taggedImg.tags.put("PositionIndex", position);
+      JSONObject tags = taggedImg.tags;
+      MDUtils.setFrameIndex(tags, frame);
+      MDUtils.setChannelIndex(tags, channel);
+      MDUtils.setSliceIndex(tags, slice);
+      MDUtils.setPositionIndex(tags, position);
       insertImage(taggedImg, show_);
    }
 
    public void insertImage(TaggedImage taggedImg, int frame, int channel, int slice,
            int position, boolean updateDisplay) throws MMScriptException, JSONException {
-      taggedImg.tags.put("FrameIndex", frame);
-      taggedImg.tags.put("ChannelIndex", channel);
-      taggedImg.tags.put("SliceIndex", slice);
-      taggedImg.tags.put("PositionIndex", position);
+      JSONObject tags = taggedImg.tags;
+      MDUtils.setFrameIndex(tags, frame);
+      MDUtils.setChannelIndex(tags, channel);
+      MDUtils.setSliceIndex(tags, slice);
+      MDUtils.setPositionIndex(tags, position);
       insertImage(taggedImg, updateDisplay, true);
    }
 
    public void insertImage(TaggedImage taggedImg, int frame, int channel, int slice,
            int position, boolean updateDisplay, boolean waitForDisplay) throws MMScriptException, JSONException {
-      taggedImg.tags.put("FrameIndex", frame);
-      taggedImg.tags.put("ChannelIndex", channel);
-      taggedImg.tags.put("SliceIndex", slice);
-      taggedImg.tags.put("PositionIndex", position);
+      JSONObject tags = taggedImg.tags;
+      MDUtils.setFrameIndex(tags, frame);
+      MDUtils.setChannelIndex(tags, channel);
+      MDUtils.setSliceIndex(tags, slice);
+      MDUtils.setPositionIndex(tags, position);
       insertImage(taggedImg, updateDisplay, waitForDisplay);
    }
 
@@ -680,12 +683,16 @@ public class MMAcquisition {
 
    /**
     * Same as close(), but also closes the display
+    * @return false if canceled by user, true otherwise
     */
-   public void closeImageWindow() {
-      close();
+   public boolean closeImageWindow() {
       if (virtAcq_ != null) {
-         virtAcq_.close();
+         if (!virtAcq_.close()) {
+            return false;
+         }
       }
+      close();
+      return true;
    }
 
    /**
@@ -790,7 +797,7 @@ public class MMAcquisition {
             imageCache_.getSummaryMetadata().getJSONArray("ChColors").put(channel, rgb);
             if (show_) {
                virtAcq_.updateChannelNamesAndColors();
-               virtAcq_.updateAndDraw();
+               virtAcq_.updateAndDraw(true);
             }
          } catch (JSONException ex) {
             throw new MMScriptException(ex);
@@ -961,6 +968,11 @@ public class MMAcquisition {
       }
    }
 
+   /**
+    * Tests whether the window associated with this acquisition is closed
+    * 
+    * @return true when acquisition has an open window, false otherwise 
+    */
    public boolean windowClosed() {
       if (!show_ || !initialized_) {
          return false;
@@ -971,6 +983,12 @@ public class MMAcquisition {
       return true;
    }
    
+   /**
+    * Returns show flag, indicating whether this acquisition was opened with
+    * a request to show the image in a window
+    * 
+    * @return flag for request to display image in window
+    */
    public boolean getShow() {
       return show_;
    }

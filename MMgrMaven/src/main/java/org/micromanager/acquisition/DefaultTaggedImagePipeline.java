@@ -2,12 +2,15 @@ package org.micromanager.acquisition;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+
 import mmcorej.TaggedImage;
+
 import org.json.JSONObject;
 import org.micromanager.api.DataProcessor;
 import org.micromanager.api.IAcquisitionEngine2010;
 import org.micromanager.api.ImageCache;
 import org.micromanager.api.ScriptInterface;
+import org.micromanager.api.SequenceSettings;
 import org.micromanager.utils.MMScriptException;
 
 /**
@@ -27,7 +30,7 @@ public class DefaultTaggedImagePipeline {
    /*
     * This class creates the default sequence of modules
     * that digest a TaggedImage. They are
-    * AcquisitionEngine2010 -> ProcessorStack -> LiveAcq -> ImageCache
+    * AcquisitionEngine2010 -> ProcessorStack -> DefaultTaggedImageSink -> ImageCache
     *   -> VirtualAcquisitionDisplay
     * Other kinds of pipelines can be set up in this way.
     */
@@ -39,11 +42,11 @@ public class DefaultTaggedImagePipeline {
            boolean diskCached) throws ClassNotFoundException, InstantiationException, IllegalAccessException, MMScriptException {
 
       // Start up the acquisition engine
-      BlockingQueue<TaggedImage> taggedImageQueue = acqEngine.run(sequenceSettings);
+      BlockingQueue<TaggedImage> engineOutputQueue = acqEngine.run(sequenceSettings, true, gui.getPositionList(), gui.getAutofocusManager().getDevice());
       summaryMetadata_ = acqEngine.getSummaryMetadata();
 
       // Set up the DataProcessor<TaggedImage> sequence
-      BlockingQueue<TaggedImage> taggedImageQueue2 = ProcessorStack.run(taggedImageQueue, imageProcessors);
+      BlockingQueue<TaggedImage> procStackOutputQueue = ProcessorStack.run(engineOutputQueue, imageProcessors);
 
       // Create the default display
       acqName_ = gui.createAcquisition(summaryMetadata_, diskCached, gui.getHideMDADisplayOption());
@@ -52,8 +55,8 @@ public class DefaultTaggedImagePipeline {
       imageCache_ = acq.getImageCache();
 
       // Start pumping images into the ImageCache
-      LiveAcq liveAcq = new LiveAcq(taggedImageQueue2, imageCache_);
-      liveAcq.start();
+      DefaultTaggedImageSink sink = new DefaultTaggedImageSink(procStackOutputQueue, imageCache_);
+      sink.start();
    }
 
 }

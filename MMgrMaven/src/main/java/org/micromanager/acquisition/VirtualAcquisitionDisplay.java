@@ -22,13 +22,9 @@
 //
 package org.micromanager.acquisition;
 
-import org.micromanager.internalinterfaces.DisplayControls;
-import org.micromanager.internalinterfaces.Histograms;
-import java.lang.reflect.InvocationTargetException;
-import ij.ImageStack;
-import ij.process.LUT;
 import ij.CompositeImage;
 import ij.ImagePlus;
+import ij.ImageStack;
 import ij.WindowManager;
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
@@ -38,36 +34,63 @@ import ij.gui.Toolbar;
 import ij.io.FileInfo;
 import ij.measure.Calibration;
 import ij.plugin.frame.ContrastAdjuster;
-import java.awt.*;
-import java.awt.event.*;
+import ij.process.LUT;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.lang.reflect.InvocationTargetException;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+
 import mmcorej.TaggedImage;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.micromanager.MMStudioMainFrame;
-import org.micromanager.api.*;
+import org.micromanager.api.ImageCache;
+import org.micromanager.api.ImageCacheListener;
+import org.micromanager.api.MMListenerInterface;
+import org.micromanager.api.TaggedImageStorage;
 import org.micromanager.graph.HistogramControlsState;
 import org.micromanager.graph.HistogramSettings;
 import org.micromanager.graph.MultiChannelHistograms;
 import org.micromanager.graph.SingleChannelHistogram;
-import org.micromanager.utils.*;
+import org.micromanager.internalinterfaces.DisplayControls;
+import org.micromanager.internalinterfaces.Histograms;
+import org.micromanager.utils.CanvasPaintPending;
+import org.micromanager.utils.ContrastSettings;
+import org.micromanager.utils.FileDialogs;
+import org.micromanager.utils.GUIUtils;
+import org.micromanager.utils.JavaUtils;
+import org.micromanager.utils.MDUtils;
+import org.micromanager.utils.MMScriptException;
+import org.micromanager.utils.ReportingUtils;
 
-public final class VirtualAcquisitionDisplay implements AcquisitionDisplay, 
+public final class VirtualAcquisitionDisplay implements 
         ImageCacheListener, MMListenerInterface {
 
    public static VirtualAcquisitionDisplay getDisplay(ImagePlus imgp) {
@@ -116,8 +139,6 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
    private Component zAnimationIcon_, pIcon_, tAnimationIcon_, cIcon_;
    private Component zLockIcon_, cLockIcon_, pLockIcon_, tLockIcon_;
    private Timer resetToLockedTimer_;
-   private HashMap<Integer, Integer> zStackMins_;
-   private HashMap<Integer, Integer> zStackMaxes_;
    private Histograms histograms_;
    private HistogramControlsState histogramControlsState_;
    private boolean albumSaved_ = false;
@@ -133,6 +154,9 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
 
    public void propertyChangedAlert(String device, String property, String value) {
       //throw new UnsupportedOperationException("Not supported yet.");
+   }
+   
+   public void systemConfigurationLoaded() {
    }
 
    public void configGroupChangedAlert(String groupName, String newConfig) {
@@ -180,13 +204,11 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
 
       public void drawWithoutUpdate();
       
-      public void updateAndDrawWithoutGUIUpdater();
-
    }
 
    public class MMCompositeImage extends CompositeImage implements IMMImagePlus {
-      
-      private GUIUpdater updater1 = new GUIUpdater(), updater2 = new GUIUpdater(), updater3 = new GUIUpdater();
+            
+      boolean paintPendingSetByMe_ = false;
       
       MMCompositeImage(ImagePlus imgp, int type) {
          super(imgp, type);
@@ -197,7 +219,6 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
          return name_;
       }
 
-      
       @Override
       public int getImageStackSize() {
          return super.nChannels * super.nSlices * super.nFrames;
@@ -242,13 +263,14 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
          super.reset();
       }
 
+      //Must be called on EDT so to prevent exception that occurs when currentChannel gets
+      //set to -1 while updateImage() is running
       @Override
       public void reset() {
          if (SwingUtilities.isEventDispatchThread()) {
             super.reset();
          } else {
             SwingUtilities.invokeLater(new Runnable() {
-
                @Override
                public void run() {
                   superReset();
@@ -259,7 +281,7 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
 
       @Override
       public synchronized void setMode(final int mode) {
-               superSetMode(mode);
+         superSetMode(mode);
       }
 
       private void superSetMode(int mode) {
@@ -288,94 +310,83 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
          } catch (NoSuchFieldException ex) {
             ReportingUtils.logError("ImageJ ContrastAdjuster doesn't have field named instance");
          }
-
          super.updateImage();
       }
-
-
-
-      private Runnable updateAndDrawRunnable() {
-         return new Runnable() {
-
-            @Override
-            public void run() {
-               superUpdateImage();
-               imageChangedUpdate();
-               try {
-                  GUIUtils.invokeLater(new Runnable() {
-
-                     @Override
-                     public void run() {
-                        try {
-                           JavaUtils.invokeRestrictedMethod(this, ImagePlus.class, "notifyListeners", 2);
-                        } catch (Exception ex) {
-                        }
-                        superDraw();
-                        MMStudioMainFrame.getInstance().getLiveModeTimer().updateFPS();
-                     }
-                  });
-               } catch (Exception e) {
-                  ReportingUtils.logError(e);
-               }
-            }
-         };
+      
+      public void updateAndDraw(boolean forceUpdateAndPaint) {
+         if (forceUpdateAndPaint) {
+            //there may be a paint pending, but we want to make sure this update gets called regardless
+            CanvasPaintPending.removePaintPending(hyperImage_.getCanvas(), this);
+            updateAndDraw();
+         } else {    
+            updateAndDraw();
+         }
       }
 
+      /*
+       * called when image pixels change
+       */
       @Override
-      public void updateAndDrawWithoutGUIUpdater() {
+      public void updateAndDraw() {
+         if (CanvasPaintPending.isMyPaintPending(
+                 hyperImage_.getCanvas(), this) ) {
+            return;
+         }
+         CanvasPaintPending.setPaintPending(hyperImage_.getCanvas(), this);
+         superUpdateImage(); 
+         imageChangedUpdate(); //updates histograms, metadata panel, calculates LUTS and applies to image
          try {
-            GUIUtils.invokeLater(updateAndDrawRunnable());
+            GUIUtils.invokeLater(new Runnable() {
+               @Override
+               public void run() {
+                  try {
+                     JavaUtils.invokeRestrictedMethod(this, ImagePlus.class, "notifyListeners", 2);
+                  } catch (Exception ex) {
+                  }
+                  superDraw();
+                  MMStudioMainFrame.getInstance().getLiveModeTimer().updateFPS();
+               }
+            });
          } catch (Exception e) {
             ReportingUtils.logError(e);
          }
       }
-      
-      @Override
-      public void updateAndDraw() {         
-          updater1.post(updateAndDrawRunnable());
-      }
-      
+
       private void superDraw() {
-        if (super.win != null ) {
+         if (super.win != null) {
             super.getCanvas().repaint();
          }
       }
 
+      /*
+       * Doesn't get called during acquisition, animation, contrast adjustment, but 
+       * may get called sometimes by internal imageJ functions
+       */
       @Override
       public void draw() {
-         Runnable runnable = new Runnable() {
-             
-            @Override
-            public void run() {
-               imageChangedUpdate();
-               superDraw();
-               MMStudioMainFrame.getInstance().getLiveModeTimer().updateFPS();
-            }
-         };
-         updater2.post(runnable);
+         imageChangedUpdate(); //updates histograms, metadata panel, calculates LUTS and applies to image
+         superDraw();
+         MMStudioMainFrame.getInstance().getLiveModeTimer().updateFPS();
       }
 
+      /*
+       * Called when images changes due to changes in contrast, but not pixels themselves
+       * Histogram controls tell image to update without LUTS without updating pixels, metadata, etc
+       */
       @Override
       public void drawWithoutUpdate() {
-         Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-               getWindow().getCanvas().setImageUpdated();
-               superDraw();
-            }           
-         };
-         updater3.post(runnable);
+         //dont check for paint pending because always want this to reflect the most recent changes
+         hyperImage_.getCanvas().setPaintPending(true);
+         getWindow().getCanvas().setImageUpdated();
+         superDraw();
       }
    }
 
    public class MMImagePlus extends ImagePlus implements IMMImagePlus {
 
-      private GUIUpdater updater1 = new GUIUpdater(), updater2 = new GUIUpdater();
-      public VirtualAcquisitionDisplay display_;
 
-      MMImagePlus(String title, ImageStack stack, VirtualAcquisitionDisplay disp) {
+      MMImagePlus(String title, ImageStack stack) {
          super(title, stack);
-         display_ = disp;
       }
 
       @Override
@@ -428,44 +439,19 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
             super.getCanvas().repaint();
          } 
       }
-      
-      private Runnable drawRunnable() {
-         return new Runnable() {
-            @Override
-            public void run() {
-               imageChangedUpdate();
-               getWindow().getCanvas().setImageUpdated();
-               superDraw();
-               MMStudioMainFrame.getInstance().getLiveModeTimer().updateFPS();
-            }       
-         };
-      }
-      
-      @Override
-      public void updateAndDrawWithoutGUIUpdater() {
-         try {
-            GUIUtils.invokeLater(drawRunnable());
-         } catch (Exception e) {
-            ReportingUtils.logError(e);
-         }
-      }
 
       @Override
-      public void draw() {        
-         updater1.post(drawRunnable());
+      public void draw() {
+         imageChangedUpdate();
+         getWindow().getCanvas().setImageUpdated();
+         superDraw();
+         MMStudioMainFrame.getInstance().getLiveModeTimer().updateFPS();
       }
 
       @Override
       public void drawWithoutUpdate() {
-         Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-               //ImageJ requires (this
-               getWindow().getCanvas().setImageUpdated();
-               superDraw();
-            }
-         };
-         updater2.post(runnable);
+         getWindow().getCanvas().setImageUpdated();
+         superDraw();
       }
    }
 
@@ -479,8 +465,6 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
       eng_ = eng;
       pSelector_ = createPositionScrollbar();
       mda_ = eng != null;
-      zStackMins_ = new HashMap<Integer, Integer>();
-      zStackMaxes_ = new HashMap<Integer, Integer>();
       this.albumSaved_ = imageCache.isFinished();
    }
 
@@ -495,7 +479,6 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
    }
 
    private void startup(JSONObject firstImageMetadata) {
-//      EDTProfiler edtp = new EDTProfiler();
       mdPanel_ = MMStudioMainFrame.getInstance().getMetadataPanel();
       JSONObject summaryMetadata = getSummaryMetadata();
       int numSlices = 1;
@@ -555,17 +538,20 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
             ReportingUtils.logError(ex);
          }
       }
-      if (simple_) {
-         controls_ = new SimpleWindowControls(this);
-      } else {
-         controls_ = new HyperstackControls(this);
+      //Hack: only add controls if null to allow overriding classes to implement custom controls
+      if (controls_ == null) {
+         if (simple_) {
+            controls_ = new SimpleWindowControls(this);
+         } else {
+            controls_ = new HyperstackControls(this);
+         }
       }
       hyperImage_ = createHyperImage(createMMImagePlus(virtualStack_),
-              numGrayChannels, numSlices, numFrames, virtualStack_, controls_);
+              numGrayChannels, numSlices, numFrames, virtualStack_);
 
       applyPixelSizeCalibration(hyperImage_);
 
-
+      
       histogramControlsState_ =  mdPanel_.getContrastPanel().createDefaultControlsState();
       createWindow();
       //Make sure contrast panel sets up correctly here
@@ -586,7 +572,7 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
          setNumPositions(numPositions);
       }
 
-      updateAndDraw(false);
+      updateAndDraw(true);
       updateWindowTitleAndStatus();
 
       forcePainting();
@@ -653,7 +639,6 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
          zAnimated_ = false;
          refreshScrollbarIcons();
          moveScrollBarsToLockedPositions();
-         return;
       } else {
          animateFrames(false);
          animationTimer_ = new java.util.Timer();
@@ -688,7 +673,6 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
          tAnimated_ = false;
          refreshScrollbarIcons();
          moveScrollBarsToLockedPositions();
-         return;
       } else {
          animateSlices(false);
          animationTimer_ = new java.util.Timer();
@@ -1065,7 +1049,7 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
    @Override
    public void imagingFinished(String path) {
       updateDisplay(null, true);
-      updateAndDraw();
+      updateAndDraw(true);
       if (!(eng_ != null && eng_.abortRequested())) {
          updateWindowTitleAndStatus();
       }
@@ -1110,19 +1094,9 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
             lastSliceShown_ = slice;
             lastPositionShown_ = position;
             lastDisplayTime_ = t;
-            forceImagePaint();
          }
       } catch (Exception e) {
          ReportingUtils.logError(e);
-      }
-   }
-
-   private void forceImagePaint() {
-      if (hyperImage_ != null) {
-         ImageCanvas canvas = hyperImage_.getCanvas();
-         if (canvas != null) {
-            canvas.repaint();
-         }
       }
    }
 
@@ -1291,15 +1265,11 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
          }
       }
    }
-
-   public void updateAndDraw() {
-      updateAndDraw(true);
-   }
    
-   public void updateAndDraw(boolean useGUIUpdater) {
-      if (hyperImage_ != null && hyperImage_.isVisible()) {
-         if (!useGUIUpdater) {
-            ((IMMImagePlus) hyperImage_).updateAndDrawWithoutGUIUpdater(); 
+   public void updateAndDraw(boolean force) {
+      if (hyperImage_ != null && hyperImage_.isVisible()) {  
+         if (hyperImage_ instanceof MMCompositeImage) {                   
+            ((MMCompositeImage) hyperImage_).updateAndDraw(force);
          } else {
             hyperImage_.updateAndDraw();
          }
@@ -1399,10 +1369,8 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
       showImage(taggedImg.tags, waitForDisplay);
    }
    
-   public GUIUpdater showImageUpdater = new GUIUpdater();
-
    public void showImage(final JSONObject tags, boolean waitForDisplay) throws InterruptedException, InvocationTargetException {
-      Runnable run = new Runnable() {
+      SwingUtilities.invokeLater( new Runnable() {
          public void run() {
 
             updateWindowTitleAndStatus();
@@ -1412,22 +1380,8 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
             }
 
             if (hyperImage_ == null) {
-               try {
-                  GUIUtils.invokeAndWait(new Runnable() {
-                     @Override
-                     public void run() {
-                        try {
-                           startup(tags);
-                        } catch (Exception e) {
-                           ReportingUtils.logError(e);
-                        }
-                     }
-                  });
-               } catch (InterruptedException ex) {
-                  ReportingUtils.logError(ex);
-               } catch (InvocationTargetException ex) {
-                  ReportingUtils.logError(ex);
-               }
+               // this has to run on the EDT
+               startup(tags);
             }
 
             int channel = 0, frame = 0, slice = 0, position = 0, superChannel = 0;
@@ -1436,7 +1390,8 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
                slice = MDUtils.getSliceIndex(tags);
                channel = MDUtils.getChannelIndex(tags);
                position = MDUtils.getPositionIndex(tags);
-               superChannel = VirtualAcquisitionDisplay.this.rgbToGrayChannel(MDUtils.getChannelIndex(tags));
+               superChannel = VirtualAcquisitionDisplay.this.rgbToGrayChannel(
+                       MDUtils.getChannelIndex(tags));
             } catch (Exception ex) {
                ReportingUtils.logError(ex);
             }
@@ -1494,23 +1449,18 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
                setPosition(position);
                hyperImage_.setPosition(1 + superChannel, 1 + slice, 1 + frame);
             }
-
-            boolean useGUIUpdater = frame != 0 || simple_;
-            if (simple_) {
-               simpleWinImagesReceived_++;
-               //Make sure update and draw gets called without GUI updater to initilze new snap win correctly
-               int numChannels;
-               try {
-                  numChannels = MDUtils.getNumChannels(getSummaryMetadata());
-               } catch (Exception e) {
-                  numChannels = 7;
-               }
-               if (simpleWinImagesReceived_ <= numChannels) {
-                  useGUIUpdater = false;
-               }
+            
+            if (frame == 0) {
+               initializeContrast();
             }
 
-            updateAndDraw(useGUIUpdater);
+            //dont't force an update with live win
+            boolean forceUpdate = ! simple_;
+            if (simple_ && !MMStudioMainFrame.getInstance().isLiveModeOn()) {
+               //unless this is a snap or live mode has stopped
+               forceUpdate = true;
+            }     
+            updateAndDraw(forceUpdate);
             resumeLocksAndAnimationAfterImageArrival();
                       
             //get channelgroup name for use in loading contrast setttings
@@ -1530,12 +1480,9 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
                   }
                }
             }
-            if (frame == 0) {
-               initializeContrast();
-            }
+
          }
-      };
-      showImageUpdater.post(run);
+      });
    }
 
    private void initializeContrast() {
@@ -1561,7 +1508,7 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
    public void storeChannelHistogramSettings(int channelIndex, int min, int max, 
            double gamma, int histMax, int displayMode) {
      if (!contrastInitialized_ ) {
-        return; //don't erroneously initialize contrast
+        return; //don't erroneously initialize c   ontrast
      }
       //store for this dataset
       imageCache_.storeChannelDisplaySettings(channelIndex, min, max, gamma, histMax, displayMode);
@@ -1595,7 +1542,7 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
       }
       //need to call this even though updateAndDraw also calls it to get autostretch to work properly
       imageChangedUpdate();
-      updateAndDraw();
+      updateAndDraw(true);
    }
 
    public void setPosition(int p) {
@@ -1809,7 +1756,7 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
    }
 
    final public MMImagePlus createMMImagePlus(AcquisitionVirtualStack virtualStack) {
-      MMImagePlus img = new MMImagePlus(imageCache_.getDiskLocation(), virtualStack, this);
+      MMImagePlus img = new MMImagePlus(imageCache_.getDiskLocation(), virtualStack);
       FileInfo fi = new FileInfo();
       fi.width = virtualStack.getWidth();
       fi.height = virtualStack.getHeight();
@@ -1820,8 +1767,7 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
    }
 
    final public ImagePlus createHyperImage(MMImagePlus mmIP, int channels, int slices,
-           int frames, final AcquisitionVirtualStack virtualStack,
-           DisplayControls hc) {
+           int frames, final AcquisitionVirtualStack virtualStack) {
       final ImagePlus hyperImage;
       mmIP.setNChannelsUnverified(channels);
       mmIP.setNFramesUnverified(frames);
@@ -1863,7 +1809,7 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
          //updates the histogram after an ROI is drawn
          @Override
          public void mouseReleased(MouseEvent me) {
-            hyperImage_.updateAndDraw();
+            ((MMCompositeImage) hyperImage_).updateAndDraw(true);
          }
 
          @Override
@@ -2011,11 +1957,19 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
    }
     */
 
-   public void close() {
+   /**
+    * Closes the ImageWindow and associated ImagePlus
+    * 
+    * @return false if canceled by user, true otherwise 
+    */
+   public boolean close() {
       if (hyperImage_ != null) {
-         hyperImage_.getWindow().windowClosing(null);
+         if (!hyperImage_.getWindow().close()) {
+            return false;
+         }
          hyperImage_.close();
       }
+      return true;
    }
 
    public synchronized boolean windowClosed() {
@@ -2199,6 +2153,10 @@ public final class VirtualAcquisitionDisplay implements AcquisitionDisplay,
        return false;
    }
 
+   /*
+    * Called when contrast changes as a result of user or programmtic input, but underlying pixels 
+    * remain unchanges
+    */
    public void drawWithoutUpdate() {
       if (hyperImage_ != null) {
          ((IMMImagePlus) hyperImage_).drawWithoutUpdate();

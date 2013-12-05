@@ -15,7 +15,7 @@
 //               IN NO EVENT SHALL THE COPYRIGHT OWNER OR
 //               CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 //               INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES.
-//CVS:          $Id: MMStudioMainFrame.java 11283 2013-06-26 01:24:30Z nico $
+//CVS:          $Id: MMStudioMainFrame.java 12133 2013-11-17 06:24:53Z nico $
 //
 package org.micromanager;
 
@@ -41,10 +41,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Point2D;
-
 import java.io.File;
 import java.io.IOException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -76,18 +74,19 @@ import mmcorej.StrVector;
 
 import org.json.JSONObject;
 import org.micromanager.acquisition.AcquisitionManager;
-import org.micromanager.api.AcquisitionEngine;
 import org.micromanager.api.Autofocus;
+import org.micromanager.api.DataProcessor;
 import org.micromanager.api.MMPlugin;
+import org.micromanager.api.PositionList;
 import org.micromanager.api.ScriptInterface;
 import org.micromanager.api.MMListenerInterface;
+import org.micromanager.api.SequenceSettings;
 import org.micromanager.conf2.ConfiguratorDlg2;
 import org.micromanager.conf2.MMConfigFileException;
 import org.micromanager.conf2.MicroscopeModel;
 import org.micromanager.graph.GraphData;
 import org.micromanager.graph.GraphFrame;
 import org.micromanager.navigation.CenterAndDragListener;
-import org.micromanager.navigation.PositionList;
 import org.micromanager.navigation.XYZKeyListener;
 import org.micromanager.navigation.ZWheelListener;
 import org.micromanager.utils.AutofocusManager;
@@ -102,34 +101,32 @@ import org.micromanager.utils.TextUtils;
 import org.micromanager.utils.TooltipTextMaker;
 import org.micromanager.utils.WaitDialog;
 
-
 import bsh.EvalError;
 import bsh.Interpreter;
 
 import com.swtdesigner.SwingResourceManager;
-import ij.Menus;
+
 import ij.gui.ImageCanvas;
 import ij.gui.ImageWindow;
 import ij.gui.Toolbar;
+
 import java.awt.Cursor;
-import java.awt.Frame;
 import java.awt.KeyboardFocusManager;
-import java.awt.Menu;
-import java.awt.MenuItem;
 import java.awt.dnd.DropTarget;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collections;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.event.AncestorListener;
-import mmcorej.TaggedImage;
-import org.json.JSONException;
 
+import mmcorej.TaggedImage;
+
+import org.json.JSONException;
 import org.micromanager.acquisition.AcquisitionWrapperEngine;
 import org.micromanager.acquisition.LiveModeTimer;
 import org.micromanager.acquisition.MMAcquisition;
@@ -140,7 +137,6 @@ import org.micromanager.acquisition.TaggedImageQueue;
 import org.micromanager.acquisition.TaggedImageStorageDiskDefault;
 import org.micromanager.acquisition.TaggedImageStorageMultipageTiff;
 import org.micromanager.acquisition.VirtualAcquisitionDisplay;
-import org.micromanager.api.DeviceControlGUI;
 import org.micromanager.api.IAcquisitionEngine2010;
 import org.micromanager.graph.HistogramSettings;
 import org.micromanager.utils.DragDropUtil;
@@ -158,9 +154,7 @@ import org.micromanager.utils.UIMonitor;
 /*
  * Main panel and application class for the MMStudio.
  */
-public class MMStudioMainFrame extends JFrame implements 
-        ScriptInterface, 
-        DeviceControlGUI {
+public class MMStudioMainFrame extends JFrame implements ScriptInterface {
 
    private static final String MICRO_MANAGER_TITLE = "Micro-Manager";
    private static final long serialVersionUID = 3556500289598574541L;
@@ -240,7 +234,7 @@ public class MMStudioMainFrame extends JFrame implements
 
    // MMcore
    private CMMCore core_;
-   private AcquisitionEngine engine_;
+   private AcquisitionWrapperEngine engine_;
    private PositionList posList_;
    private PositionListDlg posListDlg_;
    private String openAcqDirectory_ = "";
@@ -307,7 +301,7 @@ public class MMStudioMainFrame extends JFrame implements
    }
 
    public static void createSimpleDisplay(String name, ImageCache cache) throws MMScriptException {
-      simpleDisplay_ = new VirtualAcquisitionDisplay(cache, name);  
+      simpleDisplay_ = new VirtualAcquisitionDisplay(cache, name); 
    }
    
  public void checkSimpleAcquisition() {
@@ -443,7 +437,7 @@ public class MMStudioMainFrame extends JFrame implements
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    ij.plugin.BrowserLauncher.openURL("http://valelab.ucsf.edu/~MM/MMwiki/index.php/Micro-Manager_User%27s_Guide");
+                    ij.plugin.BrowserLauncher.openURL("http://micro-manager.org/wiki/Micro-Manager_User%27s_Guide");
                 } catch (IOException e1) {
                     ReportingUtils.showError(e1);
                 }
@@ -457,7 +451,7 @@ public class MMStudioMainFrame extends JFrame implements
             @Override
              public void actionPerformed(ActionEvent e) {
                 try {
-                    ij.plugin.BrowserLauncher.openURL("http://valelab.ucsf.edu/~MM/MMwiki/index.php/Micro-Manager_Configuration_Guide");
+                    ij.plugin.BrowserLauncher.openURL("http://micro-manager.org/wiki/Micro-Manager_Configuration_Guide");
                 } catch (IOException e1) {
                     ReportingUtils.showError(e1);
                 }
@@ -603,15 +597,16 @@ public class MMStudioMainFrame extends JFrame implements
    }
 
    public void runBurstAcquisition(int nr, String name, String root) throws MMScriptException {
-      //String originalName = engine_.getDirName();
       String originalRoot = engine_.getRootName();
       engine_.setDirName(name);
       engine_.setRootName(root);
       this.runBurstAcquisition(nr);
       engine_.setRootName(originalRoot);
-      //engine_.setDirName(originalDirName);
    }
 
+   /**
+    * Inserts version info for various components in the Corelog
+    */
    public void logStartupProperties() {
       core_.enableDebugLog(options_.debugLogEnabled_);
       core_.logMessage("MM Studio version: " + getVersion());
@@ -656,7 +651,7 @@ public class MMStudioMainFrame extends JFrame implements
    }
 
    
-   /*
+   /**
     * Shows images as they appear in the default display window. Uses
     * the default processor stack to process images as they arrive on
     * the rawImageQueue.
@@ -669,7 +664,7 @@ public class MMStudioMainFrame extends JFrame implements
          @Override
             public void run() {
                 try {
-                    TaggedImage image = null;
+                    TaggedImage image;
                     do {
                         image = (TaggedImage) processedImageQueue.take();
                         if (image != TaggedImageQueue.POISON) {
@@ -702,10 +697,10 @@ public class MMStudioMainFrame extends JFrame implements
       public void onPropertiesChanged() {
          // TODO: remove test once acquisition engine is fully multithreaded
          if (engine_ != null && engine_.isAcquisitionRunning()) {
-            core_.logMessage("Notification from MMCore ignored because acquistion is running!");
+            core_.logMessage("Notification from MMCore ignored because acquistion is running!", true);
          } else {
             if (ignorePropertyChanges_) {
-               core_.logMessage("Notification from MMCore ignored since the system is still loading");
+               core_.logMessage("Notification from MMCore ignored since the system is still loading", true);
             } else {
                core_.updateSystemStateCache();
                updateGUI(true);
@@ -713,7 +708,7 @@ public class MMStudioMainFrame extends JFrame implements
                for (MMListenerInterface mmIntf : MMListeners_) {
                   mmIntf.propertiesChangedAlert();
                }
-               core_.logMessage("Notification from MMCore!");
+               core_.logMessage("Notification from MMCore!", true);
             }
          }
       }
@@ -721,7 +716,7 @@ public class MMStudioMainFrame extends JFrame implements
       @Override
       public void onPropertyChanged(String deviceName, String propName, String propValue) {
          core_.logMessage("Notification for Device: " + deviceName + " Property: " +
-               propName + " changed to value: " + propValue);
+               propName + " changed to value: " + propValue, true);
          // update all registered listeners
          for (MMListenerInterface mmIntf:MMListeners_) {
             mmIntf.propertyChangedAlert(deviceName, propName, propValue);
@@ -736,6 +731,13 @@ public class MMStudioMainFrame extends JFrame implements
                mmIntf.configGroupChangedAlert(groupName, newConfig);
             }
          } catch (Exception e) {
+         }
+      }
+      
+      //@Override
+      public void onSystemConfigurationLoaded() {
+         for (MMListenerInterface mmIntf:MMListeners_) {
+            mmIntf.systemConfigurationLoaded();
          }
       }
 
@@ -1166,9 +1168,9 @@ public class MMStudioMainFrame extends JFrame implements
             } catch (Exception e) {
                ReportingUtils.showError(e);
             }
-            return;
          }
       });
+      
       topPanel.add(shutterComboBox_);
       topLayout.putConstraint(SpringLayout.SOUTH, shutterComboBox_,
             114 - 22, SpringLayout.NORTH, topPanel);
@@ -1334,12 +1336,10 @@ public class MMStudioMainFrame extends JFrame implements
       toolsMenu.add(acquisitionMenuItem);
       acquisitionMenuItem.setToolTipText("Open multi-dimensional acquisition window");
       
-      centerAndDragMenuItem_ = new JCheckBoxMenuItem();
-
       
+      centerAndDragMenuItem_ = new JCheckBoxMenuItem();     
       
       centerAndDragMenuItem_.addActionListener(new ActionListener() {
-
          public void actionPerformed(ActionEvent e) {
             updateCenterAndDragListener();
             IJ.setTool(Toolbar.HAND);
@@ -1351,14 +1351,12 @@ public class MMStudioMainFrame extends JFrame implements
       centerAndDragMenuItem_.setSelected(mainPrefs_.getBoolean(MOUSE_MOVES_STAGE, false));
       centerAndDragMenuItem_.setToolTipText("When enabled, double clicking or dragging in the snap/live\n"
                                           + "window moves the XY-stage. Requires the hand tool.");
-      
-
       toolsMenu.add(centerAndDragMenuItem_);
 
+      
       final JMenuItem calibrationMenuItem = new JMenuItem();
       toolsMenu.add(calibrationMenuItem);
       calibrationMenuItem.addActionListener(new ActionListener() {
-
          @Override
          public void actionPerformed(ActionEvent e) {
             createCalibrationListDlg();
@@ -1455,7 +1453,7 @@ public class MMStudioMainFrame extends JFrame implements
             int oldBufsize = options_.circularBufferSizeMB_;
 
             OptionsDlg dlg = new OptionsDlg(options_, core_, mainPrefs_,
-                  thisInstance, sysConfigFile_);
+                  thisInstance);
             dlg.setVisible(true);
             // adjust memory footprint if necessary
             if (oldBufsize != options_.circularBufferSizeMB_) {
@@ -1704,7 +1702,7 @@ public class MMStudioMainFrame extends JFrame implements
          @Override
          public void run(){
           try {
-               ij.plugin.BrowserLauncher.openURL("https://valelab.ucsf.edu/~MM/MMwiki/index.php/Citing_Micro-Manager");
+               ij.plugin.BrowserLauncher.openURL("https://micro-manager.org/wiki/Citing_Micro-Manager");
             } catch (IOException e1) {
                ReportingUtils.showError(e1);
             }
@@ -1755,7 +1753,7 @@ public class MMStudioMainFrame extends JFrame implements
             shutterLabel_ = "";
             zStageLabel_ = "";
             xyStageLabel_ = "";
-            engine_ = new AcquisitionWrapperEngine();
+            engine_ = new AcquisitionWrapperEngine(acqMgr_);
 
             // register callback for MMCore notifications, this is a global
             // to avoid garbage collection
@@ -1774,7 +1772,8 @@ public class MMStudioMainFrame extends JFrame implements
             }
 
             loadMRUConfigFiles();
-            initializePlugins();
+            afMgr_ = new AutofocusManager(gui_);
+            Thread pluginLoader = initializePlugins();
 
             toFront();
             
@@ -1800,7 +1799,15 @@ public class MMStudioMainFrame extends JFrame implements
             // Create an instance of HotKeys so that they can be read in from prefs
             hotKeys_ = new org.micromanager.utils.HotKeys();
             hotKeys_.loadSettings();
-
+            
+            // before loading the system configuration, we need to wait 
+            // until the plugins are loaded
+            try {  
+               pluginLoader.join(2000);
+            } catch (InterruptedException ex) {
+               ReportingUtils.logError(ex, "Plugin loader thread was interupted");
+            }
+            
             // if an error occurred during config loading, 
             // do not display more errors than needed
             if (!loadSystemConfiguration())
@@ -1835,26 +1842,34 @@ public class MMStudioMainFrame extends JFrame implements
                   ReportingUtils.showError(e1);
                }
             }
-            
-            
-             centerAndDragListener_ = new CenterAndDragListener(gui_);
+                        
+            centerAndDragListener_ = new CenterAndDragListener(gui_);
              
             // switch error reporting back on
             ReportingUtils.showErrorOn(true);
          }
 
-         private void initializePlugins() {
+         private Thread initializePlugins() {
             pluginMenu_ = new JMenu();
             pluginMenu_.setText("Plugins");
             menuBar_.add(pluginMenu_);
-            new Thread("Plugin loading") {
-               @Override
-               public void run() {
-                  // Needed for loading clojure-based jars:
-                  Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-                  loadPlugins();
-               }
-            }.start();
+            Thread myThread = new ThreadPluginLoading("Plugin loading");
+            myThread.start();
+            return myThread;
+         }
+
+         class ThreadPluginLoading extends Thread {
+
+            public ThreadPluginLoading(String string) {
+               super(string);
+            }
+
+            @Override
+            public void run() {
+               // Needed for loading clojure-based jars:
+               Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+               loadPlugins();
+            }
          }
 
         
@@ -3199,22 +3214,23 @@ public class MMStudioMainFrame extends JFrame implements
       }
    }
 
+   /**
+    * Is this function still needed?  It does some magic with tags. I found 
+    * it to do harmful thing with tags when a Multi-Camera device is
+    * present (that issue is now fixed).
+    */
    public void normalizeTags(TaggedImage ti) {
       if (ti != TaggedImageQueue.POISON) {
       int channel = 0;
       try {
-         
-         if (ti.tags.has("Multi Camera-CameraChannelIndex")) {
-            channel = ti.tags.getInt("Multi Camera-CameraChannelIndex");
-         } else if (ti.tags.has("CameraChannelIndex")) {
-            channel = ti.tags.getInt("CameraChannelIndex");
-         } else if (ti.tags.has("ChannelIndex")) {
+
+         if (ti.tags.has("ChannelIndex")) {
             channel = MDUtils.getChannelIndex(ti.tags);
          }
-         ti.tags.put("ChannelIndex", channel);
-         ti.tags.put("PositionIndex", 0);
-         ti.tags.put("SliceIndex", 0);
-         ti.tags.put("FrameIndex", 0);
+         MDUtils.setChannelIndex(ti.tags, channel);
+         MDUtils.setPositionIndex(ti.tags, 0);
+         MDUtils.setSliceIndex(ti.tags, 0);
+         MDUtils.setFrameIndex(ti.tags, 0);
          
       } catch (JSONException ex) {
          ReportingUtils.logError(ex);
@@ -3275,7 +3291,7 @@ public class MMStudioMainFrame extends JFrame implements
             }
 
             comboBinning_.setMaximumRowCount((int) binSizes.size());
-            if (binSizes.size() == 0) {
+            if (binSizes.isEmpty()) {
                 comboBinning_.setEditable(true);
             } else {
                 comboBinning_.setEditable(false);
@@ -3364,8 +3380,8 @@ public class MMStudioMainFrame extends JFrame implements
           ReportingUtils.logError(e);
           toolTipDescription = "Description not available";
        } catch (NoSuchFieldException e) {
-    	   toolTipDescription = "Description not available";
-          ReportingUtils.logError(cl.getName() + " fails to implement static String tooltipDescription.");
+          toolTipDescription = "Description not available";
+          ReportingUtils.logMessage(cl.getName() + " fails to implement static String tooltipDescription.");
        } catch (IllegalArgumentException e) {
           ReportingUtils.logError(e);
        } catch (IllegalAccessException e) {
@@ -3404,7 +3420,7 @@ public class MMStudioMainFrame extends JFrame implements
             double exp = core_.getExposure();
             textFieldExp_.setText(NumberUtils.doubleToDisplayString(exp));
             configureBinningCombo();
-            String binSize = "";
+            String binSize;
             if (fromCache) {
                binSize = core_.getPropertyFromCache(cameraLabel_, MMCoreJ.getG_Keyword_Binning());
             } else {
@@ -3445,7 +3461,13 @@ public class MMStudioMainFrame extends JFrame implements
          // update Channel menus in Multi-dimensional acquisition dialog
          updateChannelCombos();
 
-         
+         // update list of pixel sizes in pixel size configuration window
+         if (calibrationListDlg_ != null) {
+            calibrationListDlg_.refreshCalibrations();
+         }
+         if (propertyBrowser_ != null) {
+            propertyBrowser_.refresh();
+         }
 
       } catch (Exception e) {
          ReportingUtils.logError(e);
@@ -3456,12 +3478,12 @@ public class MMStudioMainFrame extends JFrame implements
 
    }
 
-   @Override
+   //TODO: deprecated @Override
    public boolean okToAcquire() {
       return !isLiveModeOn();
    }
 
-   @Override
+   //TODO: deprecated @Override
    public void stopAllActivity() {
         if (this.acquisitionEngine2010 != null) {
             this.acquisitionEngine2010.stop();
@@ -3469,6 +3491,12 @@ public class MMStudioMainFrame extends JFrame implements
       enableLiveMode(false);
    }
 
+   /**
+    * Cleans up resources while shutting down 
+    * 
+    * @param calledByImageJ
+    * @return flag indicating success.  Shut down should abort when flag is false 
+    */
    private boolean cleanupOnClose(boolean calledByImageJ) {
       // Save config presets if they were changed.
       if (configChanged_) {
@@ -3479,6 +3507,12 @@ public class MMStudioMainFrame extends JFrame implements
                null, options, options[0]);
          if (n == JOptionPane.YES_OPTION) {
             saveConfigPresets();
+            // if the configChanged_ flag did not become false, the user 
+            // must have cancelled the configuration saving and we should cancel
+            // quitting as well
+            if (configChanged_) {
+               return false;
+            }
          }
       }
       if (liveModeTimer_ != null)
@@ -3529,7 +3563,8 @@ public class MMStudioMainFrame extends JFrame implements
 
       synchronized (shutdownLock_) {
          try {
-            if (core_ != null){
+            if (core_ != null) {
+               ReportingUtils.setCore(null);
                core_.delete();
                core_ = null;
             }
@@ -3577,14 +3612,13 @@ public class MMStudioMainFrame extends JFrame implements
    }
 
 
-   public synchronized void closeSequence(boolean calledByImageJ) {
+   public synchronized boolean closeSequence(boolean calledByImageJ) {
 
       if (!this.isRunning()) {
          if (core_ != null) {
             core_.logMessage("MMStudioMainFrame::closeSequence called while running_ is false");
          }
-         this.dispose();
-         return;
+         return true;
       }
       
       if (engine_ != null && engine_.isAcquisitionRunning()) {
@@ -3595,14 +3629,25 @@ public class MMStudioMainFrame extends JFrame implements
                JOptionPane.INFORMATION_MESSAGE);
 
          if (result == JOptionPane.NO_OPTION) {
-            return;
+            return false;
          }
       }
 
       stopAllActivity();
+      
+      try {
+         // Close all image windows associated with MM.  Canceling saving of 
+         // any of these should abort shutdown
+         if (!acqMgr_.closeAllImageWindows()) {
+            return false;
+         }
+      } catch (MMScriptException ex) {
+         // Not sure what to do here...
+      }
 
-      if (!cleanupOnClose(calledByImageJ))
-         return;
+      if (!cleanupOnClose(calledByImageJ)) {
+         return false;
+      }
 
       running_ = false;
 
@@ -3629,8 +3674,8 @@ public class MMStudioMainFrame extends JFrame implements
       } else {
          this.dispose();
       }
-     
-
+      
+      return true;
    }
 
    public void applyContrastSettings(ContrastSettings contrast8,
@@ -3646,7 +3691,7 @@ public class MMStudioMainFrame extends JFrame implements
                  contrast16.min, contrast16.max, contrast16.gamma);
    }
 
-   @Override
+   //TODO: deprecated @Override
    public ContrastSettings getContrastSettings() {
       ImagePlus img = WindowManager.getCurrentImage();
       if (img == null || VirtualAcquisitionDisplay.getDisplay(img) == null )
@@ -3688,9 +3733,9 @@ public class MMStudioMainFrame extends JFrame implements
             // read text file and evaluate
             interp.eval(TextUtils.readTextFile(startupScriptFile_));
          } catch (IOException exc) {
-            ReportingUtils.showError(exc, "Unable to read the startup script (" + startupScriptFile_ + ").");
+            ReportingUtils.logError(exc, "Unable to read the startup script (" + startupScriptFile_ + ").");
          } catch (EvalError exc) {
-            ReportingUtils.showError(exc);
+            ReportingUtils.logError(exc);
          } finally {
             waitDlg.closeDialog();
          }
@@ -3709,7 +3754,7 @@ public class MMStudioMainFrame extends JFrame implements
       saveMRUConfigFiles();
 
       final WaitDialog waitDlg = new WaitDialog(
-            "Loading system configuration, please wait...");
+              "Loading system configuration, please wait...");
 
       waitDlg.setAlwaysOnTop(true);
       waitDlg.showDialog();
@@ -3719,22 +3764,22 @@ public class MMStudioMainFrame extends JFrame implements
          if (sysConfigFile_.length() > 0) {
             GUIUtils.preventDisplayAdapterChangeExceptions();
             core_.waitForSystem();
-            ignorePropertyChanges_ = true; 
+            ignorePropertyChanges_ = true;
             core_.loadSystemConfiguration(sysConfigFile_);
-            ignorePropertyChanges_ = false; 
+            ignorePropertyChanges_ = false;
             GUIUtils.preventDisplayAdapterChangeExceptions();
-            
+
          }
       } catch (final Exception err) {
          GUIUtils.preventDisplayAdapterChangeExceptions();
-       
+
          ReportingUtils.showError(err);
          result = false;
-     } finally { 
- 		         waitDlg.closeDialog(); 
- 		      } 
- 		      setEnabled(true); 
- 		      initializeGUI();
+      } finally {
+         waitDlg.closeDialog();
+      }
+      setEnabled(true);
+      initializeGUI();
 
       updateSwitchConfigurationMenu();
 
@@ -3898,7 +3943,9 @@ public class MMStudioMainFrame extends JFrame implements
       }
    }
 
-   @Override
+   /**
+    * @deprecated - used to be in api/AcquisitionEngine
+    */
    public void startAcquisition() throws MMScriptException {
       testForAbortRequests();
       SwingUtilities.invokeLater(new ExecuteAcq());
@@ -3961,7 +4008,9 @@ public class MMStudioMainFrame extends JFrame implements
       }
    }
 
-   @Override
+   /**
+    * @deprecated used to be part of api
+    */
    public String runAcqusition(String name, String root) throws MMScriptException {
       return runAcquisition(name, root);
    }
@@ -3995,10 +4044,14 @@ public class MMStudioMainFrame extends JFrame implements
       SwingUtilities.invokeLater(new Runnable() {
          @Override
          public void run() {
-            if (posListDlg_ != null) {
+            if (posListDlg_ != null)
                posListDlg_.setPositionList(posList_);
+            
+            if (engine_ != null)
                engine_.setPositionList(posList_);
-            }
+            
+            if (acqControlWin_ != null)
+               acqControlWin_.updateGUIContents();
          }
       });
    }
@@ -4025,15 +4078,6 @@ public class MMStudioMainFrame extends JFrame implements
       return acqMgr_.getUniqueAcquisitionName(stub);
    }
    
-   /**
-    * @deprecated -- this function was never implemented. getAcquisition(String name) should
-    * be used instead
-    */
-   @Override
-   public MMAcquisition getCurrentAcquisition() {
-      return null; // if none available
-   }
-
    @Override
    public void openAcquisition(String name, String rootDir, int nrFrames,
          int nrChannels, int nrSlices, int nrPositions) throws MMScriptException {
@@ -4169,8 +4213,8 @@ public class MMStudioMainFrame extends JFrame implements
 
    /**
     * @deprecated  use closeAcquisitionWindow instead
+    * @deprecated - used to be in api/AcquisitionEngine
     */
-   @Override
    public void closeAcquisitionImage5D(String acquisitionName) throws MMScriptException {
       acqMgr_.closeImageWindow(acquisitionName);
    }
@@ -4181,12 +4225,12 @@ public class MMStudioMainFrame extends JFrame implements
    }
 
    /**
+    * @deprecated - used to be in api/AcquisitionEngine
     * Since Burst and normal acquisition are now carried out by the same engine,
     * loadBurstAcquistion simply calls loadAcquisition
     * t
     * @param path - path to file specifying acquisition settings
     */
-   @Override
    public void loadBurstAcquisition(String path) throws MMScriptException {
       this.loadAcquisition(path);
    }
@@ -4238,10 +4282,10 @@ public class MMStudioMainFrame extends JFrame implements
             core_.snapImage();
             ti = core_.getTaggedImage();
          }
-         ti.tags.put("ChannelIndex", channel);
-         ti.tags.put("FrameIndex", frame);
-         ti.tags.put("SliceIndex", slice);
-         ti.tags.put("PositionIndex", position);
+         MDUtils.setChannelIndex(ti.tags, channel);
+         MDUtils.setFrameIndex(ti.tags, frame);
+         MDUtils.setSliceIndex(ti.tags, slice);
+         MDUtils.setPositionIndex(ti.tags, position);
          
          MMAcquisition acq = acqMgr_.getAcquisition(name);
          if (!acq.isInitialized()) {
@@ -4256,7 +4300,7 @@ public class MMStudioMainFrame extends JFrame implements
          }
          
          if (acq.getPositions() > 1) {
-            ti.tags.put("PositionName", "Pos" + position);
+            MDUtils.setPositionName(ti.tags, "Pos" + position);
          }
 
          addImage(name, ti, true);
@@ -4340,7 +4384,9 @@ public class MMStudioMainFrame extends JFrame implements
       }
    }
 
-   
+   /**
+    * Closes all acquisitions
+    */
    public void closeAllAcquisitions() {
       acqMgr_.closeAll();
    }
@@ -4487,7 +4533,7 @@ public class MMStudioMainFrame extends JFrame implements
       }
    }
 
-   public AcquisitionEngine getAcquisitionEngine() {
+   public AcquisitionWrapperEngine getAcquisitionEngine() {
       return engine_;
    }
 
@@ -4511,7 +4557,7 @@ public class MMStudioMainFrame extends JFrame implements
             pi.menuItem = className;
          } catch (NoSuchFieldException e) {
             pi.menuItem = className;
-            ReportingUtils.logError(className + " fails to implement static String menuName.");
+            ReportingUtils.logMessage(className + " fails to implement static String menuName.");
          } catch (IllegalArgumentException e) {
             ReportingUtils.logError(e);
          } catch (IllegalAccessException e) {
@@ -4520,7 +4566,6 @@ public class MMStudioMainFrame extends JFrame implements
 
          if (pi.menuItem == null) {
             pi.menuItem = className;
-            //core_.logMessage(className + " fails to implement static String menuName.");
          }
          pi.menuItem = pi.menuItem.replace("_", " ");
          pi.pluginClass = cl;
@@ -4552,12 +4597,11 @@ public class MMStudioMainFrame extends JFrame implements
    }
 
    public String installPlugin(String className) {
-      String msg = "";
       try {
          Class clazz = Class.forName(className);
          return installPlugin(clazz);
       } catch (ClassNotFoundException e) {
-         msg = className + " plugin not found.";
+         String msg = className + " plugin not found.";
          ReportingUtils.logError(e, msg);
          return msg;
       }
@@ -4593,11 +4637,12 @@ public class MMStudioMainFrame extends JFrame implements
       return core_;
    }
 
+   @Override
    public IAcquisitionEngine2010 getAcquisitionEngine2010() {
       try {
          acquisitionEngine2010LoadingThread.join();
          if (acquisitionEngine2010 == null) {
-            acquisitionEngine2010 = (IAcquisitionEngine2010) acquisitionEngine2010Class.getConstructors()[0].newInstance(this);
+            acquisitionEngine2010 = (IAcquisitionEngine2010) acquisitionEngine2010Class.getConstructor(ScriptInterface.class).newInstance(this);
          }
          return acquisitionEngine2010;
       } catch (Exception e) {
@@ -4605,6 +4650,57 @@ public class MMStudioMainFrame extends JFrame implements
          return null;
       }
    }
+   
+   @Override
+   public void addImageProcessor(DataProcessor<TaggedImage> processor) {
+	   getAcquisitionEngine().addImageProcessor(processor);
+   }
+
+   @Override
+   public void removeImageProcessor(DataProcessor<TaggedImage> processor) {
+	   getAcquisitionEngine().removeImageProcessor(processor);
+   }
+
+   @Override
+   public void setPause(boolean state) {
+	   getAcquisitionEngine().setPause(state);
+   }
+
+   @Override
+   public boolean isPaused() {
+	   return getAcquisitionEngine().isPaused();
+   }
+   
+   @Override
+   public void attachRunnable(int frame, int position, int channel, int slice, Runnable runnable) {
+	   getAcquisitionEngine().attachRunnable(frame, position, channel, slice, runnable);
+   }
+
+   @Override
+   public void clearRunnables() {
+	   getAcquisitionEngine().clearRunnables();
+   }
+   
+   @Override
+   public SequenceSettings getAcqusitionSettings() {
+	   if (engine_ == null)
+		   return new SequenceSettings();
+	   return engine_.getSequenceSettings();
+   }
+   
+   @Override
+   public String getAcquisitionPath() {
+	   if (engine_ == null)
+		   return null;
+	   return engine_.getImageCache().getDiskLocation();
+   }
+   
+   @Override
+   public void promptToSaveAcqusition(String name, boolean prompt) throws MMScriptException {
+	   MMAcquisition acq = getAcquisition(name);
+	   getAcquisition(name).promptToSave(prompt);
+   }
+
 
    public void snapAndAddToImage5D() {
       if (core_.getCameraDevice().length() == 0) {
@@ -4622,7 +4718,7 @@ public class MMStudioMainFrame extends JFrame implements
       }
    }
 
-   public void setAcquisitionEngine(AcquisitionEngine eng) {
+   public void setAcquisitionEngine(AcquisitionWrapperEngine eng) {
       engine_ = eng;
    }
    
@@ -4681,8 +4777,7 @@ public class MMStudioMainFrame extends JFrame implements
 
 
    private void loadPlugins() {
-      afMgr_ = new AutofocusManager(this);
-
+      
       ArrayList<Class<?>> pluginClasses = new ArrayList<Class<?>>();
       ArrayList<Class<?>> autofocusClasses = new ArrayList<Class<?>>();
       List<Class<?>> classes;
@@ -4802,6 +4897,11 @@ public class MMStudioMainFrame extends JFrame implements
             setCursor(Cursor.getDefaultCursor());        		 
          }
 
+         if (cfg2 == null)
+         {
+            ReportingUtils.showError("Failed to launch Hardware Configuration Wizard");
+            return;
+         }
          cfg2.setVisible(true);
          GUIUtils.preventDisplayAdapterChangeExceptions();
 
@@ -4818,10 +4918,11 @@ public class MMStudioMainFrame extends JFrame implements
 
       } catch (Exception e) {
          ReportingUtils.showError(e);
-         return;
       }
    }
+
 }
+
 class BooleanLock extends Object {
 
    private boolean value;

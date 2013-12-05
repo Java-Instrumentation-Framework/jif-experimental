@@ -19,11 +19,12 @@
 //               CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
 //               INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES.
 //
-// CVS:          $Id: AcqControlDlg.java 10631 2013-03-11 19:16:42Z henry $
+// CVS:          $Id: AcqControlDlg.java 12108 2013-11-10 04:08:24Z nico $
 
 package org.micromanager;
 
 import com.swtdesigner.SwingResourceManager;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -37,6 +38,7 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -46,11 +48,13 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.*;
+
 import mmcorej.CMMCore;
+
+import org.micromanager.acquisition.AcquisitionEngine;
 import org.micromanager.acquisition.ComponentTitledBorder;
 import org.micromanager.acquisition.TaggedImageStorageDiskDefault;
 import org.micromanager.acquisition.TaggedImageStorageMultipageTiff;
-import org.micromanager.api.AcquisitionEngine;
 import org.micromanager.api.ScriptInterface;
 import org.micromanager.internalinterfaces.AcqSettingsListener;
 import org.micromanager.utils.AcqOrderMode;
@@ -110,6 +114,7 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
    private File acqFile_;
    private String acqDir_;
    private int zVals_ = 0;
+   private JButton acquireButton_;
    private JButton setBottomButton_;
    private JButton setTopButton_;
    protected JComboBox displayModeCombo_;
@@ -234,7 +239,6 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
 
       public ChannelTableModel(AcquisitionEngine eng) {
          acqEng_ = eng;
-         addTableModelListener(this);
       }
 
       public int getRowCount() {
@@ -257,19 +261,19 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
       public Object getValueAt(int rowIndex, int columnIndex) {
          if (channels_ != null && rowIndex < channels_.size()) {
             if (columnIndex == 0) {
-               return new Boolean(channels_.get(rowIndex).useChannel_);
+               return channels_.get(rowIndex).useChannel;
             } else if (columnIndex == 1) {
-               return channels_.get(rowIndex).config_;
+               return channels_.get(rowIndex).config;
             } else if (columnIndex == 2) {
-               return new Double(channels_.get(rowIndex).exposure_);
+               return new Double(channels_.get(rowIndex).exposure);
             } else if (columnIndex == 3) {
-               return new Double(channels_.get(rowIndex).zOffset_);
+               return new Double(channels_.get(rowIndex).zOffset);
             } else if (columnIndex == 4) {
-               return new Boolean(channels_.get(rowIndex).doZStack_);
+               return channels_.get(rowIndex).doZStack;
             } else if (columnIndex == 5) {
-               return new Integer(channels_.get(rowIndex).skipFactorFrame_);
+               return new Integer(channels_.get(rowIndex).skipFactorFrame);
             } else if (columnIndex == 6) {
-               return channels_.get(rowIndex).color_;
+               return channels_.get(rowIndex).color;
             }
          }
          return null;
@@ -288,28 +292,28 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
 
          ChannelSpec channel = channels_.get(row);
          if (col == 0) {
-            channel.useChannel_ = ((Boolean) value).booleanValue();
+            channel.useChannel = ((Boolean) value).booleanValue();
          } else if (col == 1) {
-            channel.config_ = value.toString();
-            channel.exposure_ = exposurePrefs_.getDouble(
+            channel.config = value.toString();
+            channel.exposure = exposurePrefs_.getDouble(
                     "Exposure_" + acqEng_.getChannelGroup() + "_" + 
-                    channel.config_, 10.0);
+                    channel.config, 10.0);
          } else if (col == 2) {
-            channel.exposure_ = ((Double) value).doubleValue();
+            channel.exposure = ((Double) value).doubleValue();
             exposurePrefs_.putDouble("Exposure_" + acqEng_.getChannelGroup() 
-                    + "_" + channel.config_,channel.exposure_);
+                    + "_" + channel.config,channel.exposure);
             if (options_.syncExposureMainAndMDA_) {
                gui_.setChannelExposureTime(acqEng_.getChannelGroup(), 
-                       channel.config_, channel.exposure_);
+                       channel.config, channel.exposure);
             }
          } else if (col == 3) {
-            channel.zOffset_ = ((Double) value).doubleValue();
+            channel.zOffset = ((Double) value).doubleValue();
          } else if (col == 4) {
-            channel.doZStack_ = (Boolean) value;
+            channel.doZStack = (Boolean) value;
          } else if (col == 5) {
-            channel.skipFactorFrame_ = ((Integer) value).intValue();
+            channel.skipFactorFrame = ((Integer) value).intValue();
          } else if (col == 6) {
-            channel.color_ = (Color) value;
+            channel.color = (Color) value;
          }
 
          acqEng_.setChannel(row, channel);
@@ -344,7 +348,7 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
          TableModel model = (TableModel) e.getSource();
          if (col == 6) {
             Color color = (Color) model.getValueAt(row, col);
-            colorPrefs_.putInt("Color_" + acqEng_.getChannelGroup() + "_" + channel.config_, color.getRGB());
+            colorPrefs_.putInt("Color_" + acqEng_.getChannelGroup() + "_" + channel.config, color.getRGB());
          }
       }
 
@@ -361,29 +365,29 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
        */
       public void addNewChannel() {
          ChannelSpec channel = new ChannelSpec();
-         channel.config_ = "";
+         channel.config = "";
          if (acqEng_.getChannelConfigs().length > 0) {
             for (String config : acqEng_.getChannelConfigs()) {
                boolean unique = true;
                for (ChannelSpec chan : channels_) {
-                  if (config.contentEquals(chan.config_)) {
+                  if (config.contentEquals(chan.config)) {
                      unique = false;
                   }
                }
                if (unique) {
-                  channel.config_ = config;
+                  channel.config = config;
                   break;
                }
             }
-            if (channel.config_.length() == 0) {
+            if (channel.config.length() == 0) {
                ReportingUtils.showMessage("No more channels are available\nin this channel group.");
             } else {
-               channel.color_ = new Color(colorPrefs_.getInt(
+               channel.color = new Color(colorPrefs_.getInt(
                        "Color_" + acqEng_.getChannelGroup() + "_" + 
-                       channel.config_, Color.white.getRGB()));
-               channel.exposure_ = exposurePrefs_.getDouble(
+                       channel.config, Color.white.getRGB()));
+               channel.exposure = exposurePrefs_.getDouble(
                        "Exposure_" + acqEng_.getChannelGroup() + "_" + 
-                       channel.config_, 10.0);
+                       channel.config, 10.0);
                channels_.add(channel);
             }
          }
@@ -432,7 +436,7 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
       public void cleanUpConfigurationList() {
          String config;
          for (Iterator<ChannelSpec> it = channels_.iterator(); it.hasNext();) {
-            config = it.next().config_;
+            config = it.next().config;
             if (!config.contentEquals("") && !acqEng_.isConfigAvailable(config)) {
                it.remove();
             }
@@ -446,7 +450,7 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
       public boolean duplicateChannels() {
          for (int i = 0; i < channels_.size() - 1; i++) {
             for (int j = i + 1; j < channels_.size(); j++) {
-               if (channels_.get(i).config_.equals(channels_.get(j).config_)) {
+               if (channels_.get(i).config.equals(channels_.get(j).config)) {
                   return true;
                }
             }
@@ -468,8 +472,8 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
          if (!channelGroup.equals(acqEng_.getChannelGroup()))
             return;
          for (ChannelSpec ch : channels_) {
-            if (ch.config_.equals(channel)) {
-               ch.exposure_ = exposure;
+            if (ch.config.equals(channel)) {
+               ch.exposure = exposure;
                this.fireTableDataChanged();
             }
 
@@ -541,16 +545,16 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
             for (int i = 0; i < configs.length; i++) {
                combo_.addItem(configs[i]);
             }
-            combo_.setSelectedItem(channel.config_);
+            combo_.setSelectedItem(channel.config);
             
             // end editing on selection change
             combo_.addActionListener(new ActionListener() {
 
                public void actionPerformed(ActionEvent e) {
-                  channel_.color_ = new Color(colorPrefs_.getInt(
+                  channel_.color = new Color(colorPrefs_.getInt(
                           "Color_" + acqEng_.getChannelGroup() + "_" + 
                           (String) combo_.getSelectedItem(), Color.white.getRGB()));
-                  channel_.exposure_ = exposurePrefs_.getDouble(
+                  channel_.exposure = exposurePrefs_.getDouble(
                        "Exposure_" + acqEng_.getChannelGroup() + "_" + 
                        (String) combo_.getSelectedItem(), 10.0);
                   fireEditingStopped();
@@ -576,10 +580,10 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
                return checkBox_.isSelected();
             } else if (editCol_ == 1) {
                // As a side effect, change to the color and exposure of the new channel
-               channel_.color_ = new Color(colorPrefs_.getInt("Color_" + acqEng_.getChannelGroup() + "_" + combo_.getSelectedItem(), Color.white.getRGB()));
-               channel_.exposure_ = exposurePrefs_.getDouble(
+               channel_.color = new Color(colorPrefs_.getInt("Color_" + acqEng_.getChannelGroup() + "_" + combo_.getSelectedItem(), Color.white.getRGB()));
+               channel_.exposure = exposurePrefs_.getDouble(
                        "Exposure_" + acqEng_.getChannelGroup() + "_" + 
-                       channel_.config_, 10.0);
+                       channel_.config, 10.0);
                return combo_.getSelectedItem();
             } else if (editCol_ == 2 || editCol_ == 3) {
                return new Double(NumberUtils.displayStringToDouble(text_.getText()));
@@ -634,7 +638,7 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
 
          setOpaque(false);
          if (colIndex == 0) {
-            JCheckBox check = new JCheckBox("", channel.useChannel_);
+            JCheckBox check = new JCheckBox("", channel.useChannel);
             check.setEnabled(table.isEnabled());
             check.setOpaque(true);
             if (isSelected) {
@@ -646,13 +650,13 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
             }
             return check;
          } else if (colIndex == 1) {
-            setText(channel.config_);
+            setText(channel.config);
          } else if (colIndex == 2) {
-            setText(NumberUtils.doubleToDisplayString(channel.exposure_));
+            setText(NumberUtils.doubleToDisplayString(channel.exposure));
          } else if (colIndex == 3) {
-            setText(NumberUtils.doubleToDisplayString(channel.zOffset_));
+            setText(NumberUtils.doubleToDisplayString(channel.zOffset));
          } else if (colIndex == 4) {
-            JCheckBox check = new JCheckBox("", channel.doZStack_);
+            JCheckBox check = new JCheckBox("", channel.doZStack);
             check.setEnabled(acqEng_.isZSliceSettingEnabled() && table.isEnabled());
             if (isSelected) {
                check.setBackground(table.getSelectionBackground());
@@ -663,10 +667,10 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
             }
             return check;
          } else if (colIndex == 5) {
-            setText(Integer.toString(channel.skipFactorFrame_));
+            setText(Integer.toString(channel.skipFactorFrame));
          } else if (colIndex == 6) {
             setText("");
-            setBackground(channel.color_);
+            setBackground(channel.color);
             setOpaque(true);
          }
 
@@ -702,6 +706,7 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
 
    public final void createChannelTable() {
       model_ = new ChannelTableModel(acqEng_);
+      model_.addTableModelListener(model_);
 
       channelTable_ = new JTable() {
 
@@ -709,6 +714,7 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
          protected JTableHeader createDefaultTableHeader() {
             return new JTableHeader(columnModel) {
 
+               @Override
                public String getToolTipText(MouseEvent e) {
                   String tip = null;
                   java.awt.Point p = e.getPoint();
@@ -1447,10 +1453,10 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
       closeButton.setBounds(432, 10, 80, 22);
       getContentPane().add(closeButton);
 
-      final JButton acquireButton = new JButton();
-      acquireButton.setMargin(new Insets(-9, -9, -9, -9));
-      acquireButton.setFont(new Font("Arial", Font.BOLD, 12));
-      acquireButton.addActionListener(new ActionListener() {
+      acquireButton_ = new JButton();
+      acquireButton_.setMargin(new Insets(-9, -9, -9, -9));
+      acquireButton_.setFont(new Font("Arial", Font.BOLD, 12));
+      acquireButton_.addActionListener(new ActionListener() {
 
          public void actionPerformed(ActionEvent e) {
             AbstractCellEditor ae = (AbstractCellEditor) channelTable_.getCellEditor();
@@ -1460,9 +1466,9 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
             runAcquisition();
          }
       });
-      acquireButton.setText("Acquire!");
-      acquireButton.setBounds(432, 44, 80, 22);
-      getContentPane().add(acquireButton);
+      acquireButton_.setText("Acquire!");
+      acquireButton_.setBounds(432, 44, 80, 22);
+      getContentPane().add(acquireButton_);
 
 
       final JButton stopButton = new JButton();
@@ -1783,13 +1789,13 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
          Boolean doZStack = acqPrefs_.getBoolean(CHANNEL_DOZSTACK_PREFIX + i, true);
          double zOffset = acqPrefs_.getDouble(CHANNEL_ZOFFSET_PREFIX + i, 0.0);
          ContrastSettings con = new ContrastSettings();
-         con.min = acqPrefs_.getInt(CHANNEL_CONTRAST_MIN_PREFIX + i, defaultChannel.contrast_.min);
-         con.max = acqPrefs_.getInt(CHANNEL_CONTRAST_MAX_PREFIX + i, defaultChannel.contrast_.max);
-         con.gamma = acqPrefs_.getDouble(CHANNEL_CONTRAST_GAMMA_PREFIX + i, defaultChannel.contrast_.gamma);
-         int r = acqPrefs_.getInt(CHANNEL_COLOR_R_PREFIX + i, defaultChannel.color_.getRed());
-         int g = acqPrefs_.getInt(CHANNEL_COLOR_G_PREFIX + i, defaultChannel.color_.getGreen());
-         int b = acqPrefs_.getInt(CHANNEL_COLOR_B_PREFIX + i, defaultChannel.color_.getBlue());
-         int skip = acqPrefs_.getInt(CHANNEL_SKIP_PREFIX + i, defaultChannel.skipFactorFrame_);
+         con.min = acqPrefs_.getInt(CHANNEL_CONTRAST_MIN_PREFIX + i, defaultChannel.contrast.min);
+         con.max = acqPrefs_.getInt(CHANNEL_CONTRAST_MAX_PREFIX + i, defaultChannel.contrast.max);
+         con.gamma = acqPrefs_.getDouble(CHANNEL_CONTRAST_GAMMA_PREFIX + i, defaultChannel.contrast.gamma);
+         int r = acqPrefs_.getInt(CHANNEL_COLOR_R_PREFIX + i, defaultChannel.color.getRed());
+         int g = acqPrefs_.getInt(CHANNEL_COLOR_G_PREFIX + i, defaultChannel.color.getGreen());
+         int b = acqPrefs_.getInt(CHANNEL_COLOR_B_PREFIX + i, defaultChannel.color.getBlue());
+         int skip = acqPrefs_.getInt(CHANNEL_SKIP_PREFIX + i, defaultChannel.skipFactorFrame);
          Color c = new Color(r, g, b);
          acqEng_.addChannel(name, exp, doZStack, zOffset, con, skip, c, use);
       }
@@ -1844,18 +1850,18 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
       acqPrefs_.putInt(ACQ_NUM_CHANNELS, channels.size());
       for (int i = 0; i < channels.size(); i++) {
          ChannelSpec channel = channels.get(i);
-         acqPrefs_.put(CHANNEL_NAME_PREFIX + i, channel.config_);
-         acqPrefs_.putBoolean(CHANNEL_USE_PREFIX + i, channel.useChannel_);
-         acqPrefs_.putDouble(CHANNEL_EXPOSURE_PREFIX + i, channel.exposure_);
-         acqPrefs_.putBoolean(CHANNEL_DOZSTACK_PREFIX + i, channel.doZStack_);
-         acqPrefs_.putDouble(CHANNEL_ZOFFSET_PREFIX + i, channel.zOffset_);
-         acqPrefs_.putInt(CHANNEL_CONTRAST_MIN_PREFIX + i, channel.contrast_.min);
-         acqPrefs_.putInt(CHANNEL_CONTRAST_MAX_PREFIX + i, channel.contrast_.max);
-         acqPrefs_.putDouble(CHANNEL_CONTRAST_GAMMA_PREFIX + i, channel.contrast_.gamma);
-         acqPrefs_.putInt(CHANNEL_COLOR_R_PREFIX + i, channel.color_.getRed());
-         acqPrefs_.putInt(CHANNEL_COLOR_G_PREFIX + i, channel.color_.getGreen());
-         acqPrefs_.putInt(CHANNEL_COLOR_B_PREFIX + i, channel.color_.getBlue());
-         acqPrefs_.putInt(CHANNEL_SKIP_PREFIX + i, channel.skipFactorFrame_);
+         acqPrefs_.put(CHANNEL_NAME_PREFIX + i, channel.config);
+         acqPrefs_.putBoolean(CHANNEL_USE_PREFIX + i, channel.useChannel);
+         acqPrefs_.putDouble(CHANNEL_EXPOSURE_PREFIX + i, channel.exposure);
+         acqPrefs_.putBoolean(CHANNEL_DOZSTACK_PREFIX + i, channel.doZStack);
+         acqPrefs_.putDouble(CHANNEL_ZOFFSET_PREFIX + i, channel.zOffset);
+         acqPrefs_.putInt(CHANNEL_CONTRAST_MIN_PREFIX + i, channel.contrast.min);
+         acqPrefs_.putInt(CHANNEL_CONTRAST_MAX_PREFIX + i, channel.contrast.max);
+         acqPrefs_.putDouble(CHANNEL_CONTRAST_GAMMA_PREFIX + i, channel.contrast.gamma);
+         acqPrefs_.putInt(CHANNEL_COLOR_R_PREFIX + i, channel.color.getRed());
+         acqPrefs_.putInt(CHANNEL_COLOR_G_PREFIX + i, channel.color.getGreen());
+         acqPrefs_.putInt(CHANNEL_COLOR_B_PREFIX + i, channel.color.getBlue());
+         acqPrefs_.putInt(CHANNEL_SKIP_PREFIX + i, channel.skipFactorFrame);
       }
 
       //Save custom time intervals
@@ -2027,7 +2033,9 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
       int numPositions = 1;
       try {
          numPositions = Math.max(1, gui_.getPositionList().getNumberOfPositions());
-      } catch (MMScriptException ex) {}
+      } catch (MMScriptException ex) {
+         ReportingUtils.showError(ex);
+      }
       
       int numImages;
       
@@ -2035,13 +2043,13 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
          ArrayList<ChannelSpec> list = ((ChannelTableModel) channelTable_.getModel() ).getChannels();
          ArrayList<Integer> imagesPerChannel = new ArrayList<Integer>();
          for (int i = 0; i < list.size(); i++) {
-            if (!list.get(i).useChannel_ )
+            if (!list.get(i).useChannel )
                continue;
             int num = 1;
             if (frames) {
-               num *= Math.max(1,numFrames / (list.get(i).skipFactorFrame_ + 1));
+               num *= Math.max(1,numFrames / (list.get(i).skipFactorFrame + 1));
             }
-            if (slices && list.get(i).doZStack_) {
+            if (slices && list.get(i).doZStack) {
                num *= numSlices;
             }
             if (positions) {
@@ -2360,8 +2368,10 @@ public class AcqControlDlg extends JFrame implements PropertyChangeListener, Acq
          // TODO: throw error
       }
 
-      acqEng_.setSaveFiles(savePanel_.isSelected());
-      acqEng_.setDirName(nameField_.getText());
+      acqEng_.setSaveFiles(savePanel_.isSelected());    
+      // avoid dangerous characters in the name that will be used as a directory name
+      String name = nameField_.getText().replaceAll("[/\\*!']", "-");
+      acqEng_.setDirName(name);
       acqEng_.setRootName(rootField_.getText());
 
       // update summary

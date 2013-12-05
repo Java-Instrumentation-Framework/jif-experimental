@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package org.micromanager.utils;
 
 import java.awt.AWTEvent;
@@ -14,9 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import javax.swing.AbstractButton;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComboBox;
 import javax.swing.JList;
-import javax.swing.JPopupMenu;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
@@ -79,18 +74,18 @@ public class UIMonitor {
       final int eventID = event.getID();
       String identifier = null;
       String action = null;
-      // System.out.println(event.toString()+"\n");
-      if (0 != (eventID & (ActionEvent.ACTION_EVENT_MASK | 0))) {
+
+      if (0 != (eventID & (ActionEvent.ACTION_EVENT_MASK))) {
          Object source = event.getSource();
 
          if (source instanceof Component) {
             Component component = (Component) source;
             if (component.isEnabled()) {
                String text = getComponentName(component);
-               if (!text.isEmpty()) {
+               if (text != null && !text.isEmpty()) {
                   text = "\"" + text + "\" ";
                }
-               identifier = "\n" + source.getClass().getSimpleName() + " " + text;
+               identifier = source.getClass().getSimpleName() + " " + text;
                if (eventID == MouseEvent.MOUSE_CLICKED) {
                   action = getClickAction(component);
                }
@@ -99,8 +94,10 @@ public class UIMonitor {
                }
             }
             if (identifier != null && action != null) {
-               String message = identifier + action + " in " + ((Window) SwingUtilities.getAncestorOfClass(Window.class, (Component) source)).getClass().getSimpleName() + ".";
-               ReportingUtils.logMessage(message);
+               try {
+                  String message = "[UI] " + identifier + action + " in " + ((Window) SwingUtilities.getAncestorOfClass(Window.class, (Component) source)).getClass().getSimpleName() + ".";
+                  ReportingUtils.logMessage(message);
+               } catch (NullPointerException npe) {}
             }
          }
       }
