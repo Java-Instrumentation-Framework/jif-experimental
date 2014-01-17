@@ -12,7 +12,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
  */
-package tests.gui.progress.myswing;
+package edu.mbl.jif.gui.event;
 
 import javax.swing.*;
 import java.awt.*;
