@@ -107,6 +107,7 @@ public class DatasetIterator {
 					break;
 				}
 				channelSetProcessor.process(z - 1, t - 1, p);
+            incrementNumberProcessed();
 			}
 		}
 	}
@@ -118,8 +119,16 @@ public class DatasetIterator {
 					break;
 				}
 				channelSetProcessor.process(z - 1, t - 1, p);
+            incrementNumberProcessed();
 			}
 		}
 	}
+
+int numberToProcess;
+
+private void incrementNumberProcessed() {
+   numberToProcess++;
+   // TODO callback to monitor.
+   }
 
 }

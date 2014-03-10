@@ -25,7 +25,7 @@ public class ProcessMagOrt extends AbstractProcess implements Xform {
 
     public ProcessMagOrt() {
     }
-    // "edu.mbl.jif.ps.PsCalcProcess.ProcessMagOrt"
+    
 
     public ProcessMagOrt(Map inputParameters, Map inputData) {
         super(inputParameters, inputData);
@@ -34,6 +34,7 @@ public class ProcessMagOrt extends AbstractProcess implements Xform {
     @Override
     public String getName() {
         return this.getClass().getCanonicalName();
+        // returns "edu.mbl.jif.ps.PsCalcProcess.ProcessMagOrt"
     }
 
     // XForm parameter specification...

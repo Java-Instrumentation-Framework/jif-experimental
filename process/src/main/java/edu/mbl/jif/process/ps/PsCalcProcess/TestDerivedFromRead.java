@@ -1,7 +1,7 @@
 package edu.mbl.jif.process.ps.PsCalcProcess;
 
 import edu.mbl.jif.gui.imaging.FrameImageDisplayTabbed;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+
 import edu.mbl.jif.imaging.util.ImageFactoryGrayScale;
 import edu.mbl.jif.imaging.dataset.MMgrDatasetAccessor;
 import edu.mbl.jif.imaging.dataset.linked.Antecedent;
@@ -10,6 +10,7 @@ import edu.mbl.jif.imaging.dataset.linked.DerivedFrom;
 import edu.mbl.jif.imaging.dataset.linked.Transform;
 import edu.mbl.jif.imaging.mmtiff.MDUtils;
 import edu.mbl.jif.imaging.mmtiff.TaggedImage;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Map;
