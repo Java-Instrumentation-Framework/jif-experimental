@@ -35,7 +35,7 @@ package edu.mbl.jif.fabric;
 import edu.mbl.jif.workframe.ApplicationController;
 import edu.mbl.jif.gui.status.jx.JXStatusBar2;
 //import edu.mbl.jif.gui.error.JifErrorDialog;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import edu.mbl.jif.utils.diag.CheckThreadViolationRepaintManager;
 import edu.mbl.jif.utils.diag.edt.EventDispatchThreadHangMonitor;
 import java.awt.ActiveEvent;

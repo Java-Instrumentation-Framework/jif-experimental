@@ -11,7 +11,7 @@ import edu.mbl.jif.comm.SerialPortMonitor;
 import edu.mbl.jif.comm.SerialUtils;
 import edu.mbl.jif.fabric.Application;
 
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

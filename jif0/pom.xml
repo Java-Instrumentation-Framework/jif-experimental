@@ -142,6 +142,11 @@
          <version>1.6.1</version>
          <type>jar</type>
       </dependency>
+      <dependency>
+         <groupId>${project.groupId}</groupId>
+         <artifactId>jif-minimal</artifactId>
+         <version>${project.version}</version>
+      </dependency>
    </dependencies>
    <distributionManagement>
       <repository>

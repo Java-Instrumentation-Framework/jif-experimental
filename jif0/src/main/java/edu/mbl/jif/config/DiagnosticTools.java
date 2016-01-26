@@ -2,7 +2,7 @@ package edu.mbl.jif.config;
 
 import edu.mbl.jif.camera.TextWindow;
 //import edu.mbl.jif.comm.SerialUtils;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import edu.mbl.jif.gui.swingthread.SwingThread;
 import edu.mbl.jif.utils.diag.thread.ThreadViewer;
 import edu.mbl.jif.utils.props.PropsWassup;

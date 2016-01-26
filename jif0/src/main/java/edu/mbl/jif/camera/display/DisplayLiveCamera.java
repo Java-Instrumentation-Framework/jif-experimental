@@ -8,7 +8,7 @@ import edu.mbl.jif.gui.imaging.DisplayLiveInterface;
 import edu.mbl.jif.camacq.CamAcqJ;
 import edu.mbl.jif.camacq.InstrumentController;
 import edu.mbl.jif.fabric.Application;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import edu.mbl.jif.gui.imaging.ImageDisplayPanel;
 import edu.mbl.jif.imaging.stream.StreamGenerator;
 import edu.mbl.jif.imaging.stream.StreamSource;

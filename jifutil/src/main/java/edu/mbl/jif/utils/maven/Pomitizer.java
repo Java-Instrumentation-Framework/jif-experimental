@@ -29,9 +29,8 @@ import java.util.logging.Logger;
 public class Pomitizer {
 
    static String[][] projects = new String[][]{
-      {"C:/GBH_Projs/ImgNav",
-      
-      "C:/GitHub/jif/imagenavigator"}
+      //{"C:/GBH_Projs/ImgNav", "C:/GitHub/jif/imagenavigator"},
+      {"C:/_Dev/MDSBayesTemp/MSD-Bayes", "C:/_Dev/MDSBayesTemp/MsdBayes"}
    };
    
    static String[][] TheRealprojects = new String[][]{
@@ -64,7 +63,7 @@ public class Pomitizer {
       // Destination for mavenized projects
       //String baseDest = "C:/ops/openpolscope/";
       String baseDest = "";
-
+      
             
       // for each project
       for (int i = 0; i < projects.length; i++) {

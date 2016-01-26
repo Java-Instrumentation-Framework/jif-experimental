@@ -7,7 +7,7 @@ package edu.mbl.jif.data;
 
 import com.jgoodies.binding.value.ValueModel;
 import com.l2fprod.common.swing.JDirectoryChooser;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import java.awt.Component;
 import java.io.File;
 import javax.swing.JOptionPane;

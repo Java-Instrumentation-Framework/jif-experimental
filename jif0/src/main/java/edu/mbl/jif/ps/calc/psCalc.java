@@ -31,17 +31,16 @@ public class psCalc {
 
     public static void main(String[] args) {
 
-//        
 //        for (int i = 0; i < n; i++) {
 //             // -2pi to +2pi
 //            double range = 4*Math.PI;
 //            double x = range / n * (double) (i - n / 2);
 //            System.out.println(x);
 //        }
-
+       
+        double range = Math.PI / 2;
         for (int i = 0; i < n; i++) {
             // -2pi to +2pi
-            double range = Math.PI / 2;
             double x = range / n * (double) (i - n / 2);
             double math = Math.atan(x);
             double fast = atan_66(x);
@@ -54,7 +53,6 @@ public class psCalc {
         for (int j = 0; j < 1000000; j++) {
             for (int i = 0; i < n; i++) {
                 // -2pi to +2pi
-                double range = Math.PI / 2;
                 double x = range / n * (double) (i - n / 2);
                 double math = Math.atan(x);
             }
@@ -66,14 +64,14 @@ public class psCalc {
         for (int j = 0; j < 1000000; j++) {
             for (int i = 0; i < n; i++) {
                 // -2pi to +2pi
-                double range = Math.PI / 2;
                 double x = range / n * (double) (i - n / 2);
                 double math = atan_66(x);
             }
         }
         long atan_66time = System.nanoTime() - start;
         System.out.println("atan_66:              " + atan_66time);
-       System.out.println( (float) atan_66time/ (float)mathatantime );
+        
+       System.out.println("Ratio: " + (float) atan_66time/ (float)mathatantime );
     }
 
     // <editor-fold defaultstate="collapsed" desc=">>>--- Fast Math Functions  ---<<<" >
@@ -91,6 +89,11 @@ public class psCalc {
     static final double tantwelfthpi = Math.tan(twelfthpi);	// tan(pi/12), used in atan routines
 
 
+    static double add1(double x) {
+       double b = 1.0;
+       return x + b;
+    }
+    
     static double atan_66(double x) {
         double y; // return from atan__s function
         boolean complement = false; // true if arg was >1

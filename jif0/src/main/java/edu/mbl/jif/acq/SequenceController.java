@@ -9,7 +9,7 @@ import edu.mbl.jif.camacq.CamAcqJ;
 import edu.mbl.jif.camacq.InstrumentController;
 import edu.mbl.jif.fabric.Application;
 import edu.mbl.jif.gui.clock.CountdownClock;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import edu.mbl.jif.gui.imaging.player.SeriesPlayerZoomFrame;
 import edu.mbl.jif.gui.sound.Sound;
 import edu.mbl.jif.imaging.tiff.MultipageTiffFile;

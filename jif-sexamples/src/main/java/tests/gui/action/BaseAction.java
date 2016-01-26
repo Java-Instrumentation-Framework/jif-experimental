@@ -14,12 +14,12 @@ import javax.swing.*;
 public abstract class BaseAction extends AbstractAction {
     public BaseAction(String name, ImageIcon icon, String tooltip, Integer mnemonic,
         KeyStroke accelerator) {
-        this.putValue(this.NAME, name);
+        this.putValue(NAME, name);
         if (icon != null) {
-            this.putValue(this.SMALL_ICON, icon);
+            this.putValue(SMALL_ICON, icon);
         }
-        this.putValue(this.SHORT_DESCRIPTION, tooltip);
-        this.putValue(this.MNEMONIC_KEY, mnemonic);
-        this.putValue(this.ACCELERATOR_KEY, accelerator);
+        this.putValue(SHORT_DESCRIPTION, tooltip);
+        this.putValue(MNEMONIC_KEY, mnemonic);
+        this.putValue(ACCELERATOR_KEY, accelerator);
     }
 }

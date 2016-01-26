@@ -7,7 +7,7 @@ package edu.mbl.jif.config;
 import com.l2fprod.common.swing.JButtonBar;
 import com.l2fprod.common.swing.plaf.blue.BlueishButtonBarUI;
 import edu.mbl.jif.gui.test.FrameForTest;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;

@@ -8,7 +8,7 @@ package edu.mbl.jif.acq.tasking;
 import edu.mbl.jif.acq.*;
 import edu.mbl.jif.camera.Utils;
 import edu.mbl.jif.gui.clock.CountdownClock;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 
 import java.awt.BorderLayout;
 import java.awt.Color;

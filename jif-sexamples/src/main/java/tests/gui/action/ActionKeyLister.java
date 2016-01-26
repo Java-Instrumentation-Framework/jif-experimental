@@ -9,7 +9,8 @@
 
 package tests.gui.action;
 
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+
+import edu.mbl.jif.utils.StaticSwingUtils;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;

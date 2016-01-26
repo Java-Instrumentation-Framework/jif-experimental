@@ -8,7 +8,7 @@
  */
 package edu.mbl.jif.camera;
 
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import edu.mbl.jif.gui.imaging.FrameImageDisplay;
 import edu.mbl.jif.gui.spatial.PanelControlXY;
 import edu.mbl.jif.gui.test.TestAppHarness;

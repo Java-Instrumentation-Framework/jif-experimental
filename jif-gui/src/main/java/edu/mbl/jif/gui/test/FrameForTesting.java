@@ -5,7 +5,7 @@
  */
 package edu.mbl.jif.gui.test;
 
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

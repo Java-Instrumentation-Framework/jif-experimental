@@ -5,7 +5,7 @@ import edu.mbl.jif.camacq.CamAcqJ;
 import edu.mbl.jif.camacq.InstrumentController;
 import edu.mbl.jif.camera.display.DisplayLiveCamera;
 import edu.mbl.jif.gui.dialog.DialogOkCancel;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import edu.mbl.jif.gui.imaging.zoom.ImagePanelZoomable;
 import edu.mbl.jif.gui.imaging.PointGetter;
 import edu.mbl.jif.gui.imaging.PointGetterCallback;

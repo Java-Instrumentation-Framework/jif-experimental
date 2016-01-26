@@ -2,6 +2,7 @@ package tests.gui.progress.myswing;
 
 //import skt.swing.ActiveWindowTracker;
 
+import edu.mbl.jif.gui.event.ActiveWindowTracker;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.*;

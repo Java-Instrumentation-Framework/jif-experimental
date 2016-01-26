@@ -1,4 +1,4 @@
-package tests.gui.action;
+   package tests.gui.action;
 // This example is from the book "Java in a Nutshell, Second Edition".
 // Written by David Flanagan.  Copyright (c) 1997 O'Reilly & Associates.
 // You may distribute this source code for non-commercial purposes only.

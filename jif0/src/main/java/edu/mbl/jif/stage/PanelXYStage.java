@@ -7,7 +7,7 @@ package edu.mbl.jif.stage;
 
 import edu.mbl.jif.camacq.InstrumentController;
 import edu.mbl.jif.gui.dialog.DialogOkCancel;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 
 /**
  *

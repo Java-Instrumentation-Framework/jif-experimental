@@ -16,7 +16,7 @@ import edu.mbl.jif.camacq.InstrumentController;
 import edu.mbl.jif.fabric.Application;
 import edu.mbl.jif.gui.action.AbstractActionExt;
 import edu.mbl.jif.gui.action.ActionManager;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import edu.mbl.jif.imaging.stream.StreamGenerator;
 import edu.mbl.jif.imaging.util.ImageFactoryGrayScale;
 

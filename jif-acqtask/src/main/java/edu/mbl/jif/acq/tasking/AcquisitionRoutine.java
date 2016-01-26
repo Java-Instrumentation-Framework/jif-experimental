@@ -49,6 +49,7 @@ abstract public class AcquisitionRoutine {
       AcqLogger.INSTANCE.logEvent("Commence: " + name + "====================================");
       context = new AcquisitionContext(name);
    }
+
    //-------------------- 
    List<AcqDimension> dimensions = new ArrayList<AcqDimension>();
 
@@ -63,7 +64,7 @@ abstract public class AcquisitionRoutine {
       List<Step> subSteps = step.getSubSteps();
       if (subSteps.size() > 0) {
          for (Step aStep : subSteps) {
-         findDimensionalExtents(aStep, dimensions);
+            findDimensionalExtents(aStep, dimensions);
          }
       }
       return dimensions;
@@ -86,17 +87,17 @@ abstract public class AcquisitionRoutine {
 //      }
 //      return dimensions;
 //   }
-   
-   
-  public void showDimensionalExtents(List<AcqDimension> dimensions) {
-     System.out.println("[[ DimensionalExtents ");
-     for (AcqDimension acqDimension : dimensions) {
-        System.out.println("    " + acqDimension.getName() + " = " 
-                + acqDimension.getIterations());
-     }
-     System.out.println("]] DimensionalExtents \n");
-     
-  }
+
+   public void showDimensionalExtents(List<AcqDimension> dimensions) {
+      System.out.println("[[ DimensionalExtents ");
+      for (AcqDimension acqDimension : dimensions) {
+         System.out.println("    " + acqDimension.getName() + " = "
+                 + acqDimension.getIterations());
+      }
+      System.out.println("]] DimensionalExtents \n");
+
+   }
+
    public List<AcqDimension> getDimensions() {
       return dimensions;
    }
@@ -112,7 +113,8 @@ abstract public class AcquisitionRoutine {
       steps.initialize();
    }
 
-   public void perform() throws StepException {
+   public void perform()
+           throws StepException {
       if (steps == null) {
          return;
       }

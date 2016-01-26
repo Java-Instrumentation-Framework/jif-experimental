@@ -25,7 +25,7 @@
 package edu.mbl.jif.gui.slider;
 
 import edu.mbl.jif.gui.test.FrameForTest;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import java.awt.*;
 import java.io.*;
 import javax.accessibility.*;

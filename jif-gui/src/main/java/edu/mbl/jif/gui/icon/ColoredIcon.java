@@ -1,6 +1,6 @@
 package edu.mbl.jif.gui.icon;
 
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;

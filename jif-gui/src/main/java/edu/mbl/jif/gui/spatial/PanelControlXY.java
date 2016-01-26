@@ -5,7 +5,7 @@
  */
 package edu.mbl.jif.gui.spatial;
 
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import edu.mbl.jif.gui.keyboard.GlobalHotkeyManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;

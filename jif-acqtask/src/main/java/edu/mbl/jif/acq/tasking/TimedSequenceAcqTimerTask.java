@@ -4,15 +4,14 @@
  */
 package edu.mbl.jif.acq.tasking;
 
-import edu.mbl.jif.acq.AcquisitionController;
 import edu.mbl.jif.acq.PostProcessor;
 import edu.mbl.jif.camacq.InstrumentController;
 import edu.mbl.jif.fabric.Application;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+
 import edu.mbl.jif.gui.imaging.player.SeriesPlayerZoomFrame;
 import edu.mbl.jif.imaging.tiff.MultipageTiffFile;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.SwingUtilities;

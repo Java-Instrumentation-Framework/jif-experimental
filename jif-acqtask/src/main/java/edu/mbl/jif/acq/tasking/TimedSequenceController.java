@@ -6,7 +6,7 @@ package edu.mbl.jif.acq.tasking;
 
 import edu.mbl.jif.acq.*;
 import edu.mbl.jif.camacq.InstrumentController;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import edu.mbl.jif.imaging.tiff.MultipageTiffFile;
 import ij.ImagePlus;
 

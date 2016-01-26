@@ -29,7 +29,7 @@ import javax.swing.UIManager;
 
 import com.l2fprod.common.swing.JDirectoryChooser;
 import com.l2fprod.common.swing.PercentLayout;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import javax.swing.BoxLayout;
 import javax.swing.filechooser.FileSystemView;
 

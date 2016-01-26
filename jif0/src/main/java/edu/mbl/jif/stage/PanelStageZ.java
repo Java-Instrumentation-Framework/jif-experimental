@@ -12,7 +12,7 @@ import com.jgoodies.binding.beans.PropertyAdapter;
 import com.jgoodies.binding.value.ConverterFactory;
 import edu.mbl.jif.camacq.InstrumentController;
 import edu.mbl.jif.gui.dialog.DialogOk;
-import edu.mbl.jif.gui.util.StaticSwingUtils;
+import edu.mbl.jif.utils.StaticSwingUtils;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
